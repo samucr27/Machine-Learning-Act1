@@ -1,17 +1,57 @@
 {% extends "base.html" %}
 
-{% block title %}Home - Machine Learning Project{% endblock %}
+{% block title %}Home - Data with Roots{% endblock %}
 
 {% block content %}
-    <h1>Machine Learning Project</h1>
-    <p>Universidad de Cundinamarca - Systems and Computing Engineering</p>
-    <p>Use the menu above to navigate through the sections of the project.</p>
+    <div class="p-5 mb-4 bg-body-tertiary rounded-3 text-center">
+        <h1 class="display-5 fw-bold">Data with Roots</h1>
+        <p class="col-lg-8 mx-auto fs-5">
+            A Machine Learning project developed with Python, Flask, and Bootstrap
+            for the Systems and Computing Engineering program at Universidad de
+            Cundinamarca. This application explores fundamental Machine Learning
+            concepts, real-world use cases, and a Simple Linear Regression model
+            applied to our assigned topic.
+        </p>
+    </div>
 
-    <h2>Team Members</h2>
-    <ul>
-        <li>Samuel Castellanos Rivera</li>
-        <li>Sergio Steeven Moreno Forero</li>
-        <li>Manuel Eduardo Alarcon Aza</li>
-        <li>Jonathan Alejandro Yacuma Rivera</li>
+    <h2 class="mb-3">Team Members</h2>
+    <ul class="list-group list-group-flush mb-5">
+        <li class="list-group-item">Samuel Castellanos Rivera</li>
+        <li class="list-group-item">Sergio Steeven Moreno Forero</li>
+        <li class="list-group-item">Jonathan Alejandro Yacuma Rivera</li>
+        <li class="list-group-item">Manuel Eduardo Alarcon Aza</li>
     </ul>
+
+    <h2 class="mb-3">Explore the Project</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Machine Learning</h5>
+                    <p class="card-text">Fundamental concepts and the main types of Machine Learning.</p>
+                    <a href="{{ url_for('concepts') }}" class="btn btn-outline-primary btn-sm">Concepts</a>
+                    <a href="{{ url_for('types') }}" class="btn btn-outline-primary btn-sm">Types</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Use Cases</h5>
+                    <p class="card-text">Four real-world applications of Machine Learning.</p>
+                    <a href="{{ url_for('use_case_1') }}" class="btn btn-outline-primary btn-sm">See Use Cases</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Linear Regression</h5>
+                    <p class="card-text">Concepts and a full practical implementation with a real dataset.</p>
+                    <a href="{{ url_for('lr_concepts') }}" class="btn btn-outline-primary btn-sm">Concepts</a>
+                    <a href="{{ url_for('lr_application') }}" class="btn btn-outline-primary btn-sm">Application</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

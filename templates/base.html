@@ -2,20 +2,66 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Machine Learning Project{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Data with Roots{% endblock %}</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
 
-    <nav>
-        <a href="{{ url_for('home') }}">Home</a>
-        <a href="{{ url_for('machine_learning') }}">Machine Learning</a>
-        <a href="{{ url_for('types') }}">Types</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{{ url_for('home') }}">Data with Roots</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Machine Learning
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ url_for('concepts') }}">Concepts</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('types') }}">Types of Machine Learning</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Use Cases</h6></li>
+                            <li><a class="dropdown-item" href="{{ url_for('use_case_1') }}">Use Case 1</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('use_case_2') }}">Use Case 2</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('use_case_3') }}">Use Case 3</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('use_case_4') }}">Use Case 4</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Supervised
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><h6 class="dropdown-header">Linear Regression</h6></li>
+                            <li><a class="dropdown-item" href="{{ url_for('lr_concepts') }}">Concepts</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('lr_application') }}">Application</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
 
-    <main>
+    <main class="container py-5">
         {% block content %}{% endblock %}
     </main>
 
+    <footer class="text-center text-muted py-4 border-top">
+        <small>Data with Roots &middot; Universidad de Cundinamarca &middot; Systems and Computing Engineering</small>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
