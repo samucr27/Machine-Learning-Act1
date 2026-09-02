@@ -1,8 +1,134 @@
 {% extends "base.html" %}
 
-{% block title %}Types of Machine Learning{% endblock %}
+{% block title %}Types of Machine Learning - Data with Roots{% endblock %}
 
 {% block content %}
-    <h1>Types of Machine Learning</h1>
-    <p class="text-muted">Content pending — owned by Sergio.</p>
+<div class="types-page">
+
+    <h1 class="mb-2">Types of Machine Learning</h1>
+    <p class="text-muted lead-text mb-5">
+        Machine Learning algorithms are usually grouped into three broad
+        categories, depending on how the model learns from the data it is
+        given.
+    </p>
+
+    <div class="row g-4 mb-5">
+        <div class="col-lg-4">
+            <div class="card accent-card h-100">
+                <div class="card-body p-4">
+                    <h3>Supervised Learning</h3>
+                    <p class="mb-0">
+                        The model learns from a labeled dataset, where each
+                        example already includes the correct answer. The
+                        algorithm adjusts itself to reproduce that mapping
+                        between inputs and outputs.
+                    </p>
+                    <p class="type-label mb-0">Main characteristics</p>
+                    <p class="mb-0">
+                        Requires labeled data; performance can be measured
+                        directly against known answers; learns a specific
+                        input-to-output relationship.
+                    </p>
+                    <p class="type-label mb-0">Types of problems</p>
+                    <p class="mb-0">
+                        Regression (predicting a numeric value) and
+                        classification (assigning an item to a category).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card accent-card h-100">
+                <div class="card-body p-4">
+                    <h3>Unsupervised Learning</h3>
+                    <p class="mb-0">
+                        The model works with unlabeled data and tries to
+                        find structure on its own (grouping, patterns, or
+                        relationships) without being told what the correct
+                        answer looks like.
+                    </p>
+                    <p class="type-label mb-0">Main characteristics</p>
+                    <p class="mb-0">
+                        No labeled outputs are provided; the model discovers
+                        structure rather than reproducing it; results are
+                        generally harder to evaluate objectively.
+                    </p>
+                    <p class="type-label mb-0">Types of problems</p>
+                    <p class="mb-0">
+                        Clustering (grouping similar items) and
+                        dimensionality reduction (simplifying data while
+                        keeping its structure).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card accent-card h-100">
+                <div class="card-body p-4">
+                    <h3>Reinforcement Learning</h3>
+                    <p class="mb-0">
+                        An agent learns by interacting with an environment,
+                        taking actions and receiving rewards or penalties.
+                        Over time it learns a strategy that maximizes the
+                        reward it accumulates.
+                    </p>
+                    <p class="type-label mb-0">Main characteristics</p>
+                    <p class="mb-0">
+                        Learns through trial and error; relies on a feedback
+                        signal rather than labeled examples; must balance
+                        trying new actions against using what already works.
+                    </p>
+                    <p class="type-label mb-0">Types of problems</p>
+                    <p class="mb-0">
+                        Sequential decision-making, such as game playing,
+                        robotics, and process control.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-5">
+        <div class="card-body p-4">
+            <h2>Comparison</h2>
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Type</th>
+                            <th scope="col">Data Used</th>
+                            <th scope="col">Goal</th>
+                            <th scope="col">Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Supervised</th>
+                            <td>Labeled data (input paired with the correct output)</td>
+                            <td>Predict an output for new inputs</td>
+                            <td>Predicting house prices</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Unsupervised</th>
+                            <td>Unlabeled data</td>
+                            <td>Find hidden patterns or groups</td>
+                            <td>Grouping customers by behavior</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Reinforcement</th>
+                            <td>Feedback from an environment (rewards and penalties)</td>
+                            <td>Learn the best sequence of actions</td>
+                            <td>Training a game-playing agent</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <a href="{{ url_for('use_case_1') }}" class="btn btn-outline-dark">Continue to Use Cases</a>
+
+</div>
 {% endblock %}
