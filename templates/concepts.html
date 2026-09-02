@@ -1,8 +1,206 @@
 {% extends "base.html" %}
 
-{% block title %}Concepts{% endblock %}
+{% block title %}Concepts - Data with Roots{% endblock %}
 
 {% block content %}
-    <h1>Concepts</h1>
-    <p class="text-muted">Content pending — owned by Sergio.</p>
+    <div class="mb-5 text-center">
+        <h1 class="fw-bold">Machine Learning Concepts</h1>
+        <p class="text-muted col-lg-8 mx-auto fs-5">
+            Before exploring specific use cases and building a Linear Regression
+            model, it's important to understand the foundational ideas behind
+            Machine Learning.
+        </p>
+    </div>
+
+    <!-- What is Machine Learning? -->
+    <div class="row align-items-center mb-5 g-4">
+        <div class="col-md-7">
+            <h2 class="mb-3"><span class="badge bg-primary me-2">1</span>What is Machine Learning?</h2>
+            <p class="fs-5">
+                Machine Learning (ML) is a branch of Artificial Intelligence that
+                gives computers the ability to learn patterns from data and make
+                decisions or predictions <strong>without being explicitly
+                programmed</strong> for every single rule. Instead of a developer
+                writing step-by-step instructions, an ML model is <em>trained</em>
+                using examples until it can recognize patterns on its own.
+            </p>
+        </div>
+        <div class="col-md-5">
+            <div class="card h-100 bg-primary bg-opacity-10 border-0">
+                <div class="card-body">
+                    <h6 class="text-primary fw-bold">Traditional Programming</h6>
+                    <p class="mb-3 small">Rules + Data → Program → Output</p>
+                    <hr>
+                    <h6 class="text-primary fw-bold">Machine Learning</h6>
+                    <p class="mb-0 small">Data + Output → Training → Rules (Model)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main purpose -->
+    <div class="row align-items-center mb-5 g-4 flex-md-row-reverse">
+        <div class="col-md-7">
+            <h2 class="mb-3"><span class="badge bg-primary me-2">2</span>Main Purpose of Machine Learning</h2>
+            <p class="fs-5">
+                The main purpose of Machine Learning is to build systems that can
+                <strong>generalize</strong> what they learn from past data in order
+                to make accurate predictions, classifications, or decisions on
+                <strong>new, unseen data</strong>. Rather than memorizing examples,
+                a good model captures the underlying relationship between inputs
+                and outputs.
+            </p>
+        </div>
+        <div class="col-md-5">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="fw-bold">Typical Goals</h6>
+                    <ul class="mb-0">
+                        <li>Predict future values</li>
+                        <li>Classify items into categories</li>
+                        <li>Discover hidden patterns</li>
+                        <li>Automate decision-making</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data, training, models, predictions -->
+    <h2 class="mb-4 text-center"><span class="badge bg-primary me-2">3</span>Data, Training, Models & Predictions</h2>
+    <div class="row g-4 mb-5 text-center">
+        <div class="col-6 col-md-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="fs-1 mb-2">📊</div>
+                    <h6 class="fw-bold">Data</h6>
+                    <p class="small text-muted mb-0">Raw examples collected from the real world (numbers, text, images).</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="fs-1 mb-2">⚙️</div>
+                    <h6 class="fw-bold">Training</h6>
+                    <p class="small text-muted mb-0">The algorithm analyzes the data and adjusts itself to capture patterns.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="fs-1 mb-2">🧠</div>
+                    <h6 class="fw-bold">Model</h6>
+                    <p class="small text-muted mb-0">The trained result: a mathematical representation of the learned patterns.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="fs-1 mb-2">🔮</div>
+                    <h6 class="fw-bold">Prediction</h6>
+                    <p class="small text-muted mb-0">The model's output when given new, previously unseen input data.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mb-5">
+        <span class="badge bg-secondary fs-6">Data</span>
+        <span class="mx-2">→</span>
+        <span class="badge bg-secondary fs-6">Training</span>
+        <span class="mx-2">→</span>
+        <span class="badge bg-secondary fs-6">Model</span>
+        <span class="mx-2">→</span>
+        <span class="badge bg-secondary fs-6">Prediction</span>
+    </div>
+
+    <!-- Importance of data -->
+    <div class="p-4 mb-5 bg-body-tertiary rounded-3">
+        <h2 class="mb-3"><span class="badge bg-primary me-2">4</span>The Importance of Data</h2>
+        <p class="fs-5 mb-3">
+            Data is the foundation of every Machine Learning system. The quality,
+            quantity, and relevance of the data directly determine how well a
+            model performs.
+        </p>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="d-flex align-items-start">
+                    <span class="badge bg-success rounded-pill me-2">✓</span>
+                    <div>
+                        <strong>Quality:</strong> clean, accurate, and consistent
+                        data leads to reliable models.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex align-items-start">
+                    <span class="badge bg-success rounded-pill me-2">✓</span>
+                    <div>
+                        <strong>Quantity:</strong> more examples generally help the
+                        model generalize better.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex align-items-start">
+                    <span class="badge bg-success rounded-pill me-2">✓</span>
+                    <div>
+                        <strong>Relevance:</strong> the data must actually relate
+                        to the problem being solved.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="mt-3 mb-0 text-muted small">
+            A common saying in ML is <em>"garbage in, garbage out"</em>: even the
+            best algorithm cannot compensate for poor-quality data.
+        </p>
+    </div>
+
+    <!-- Simple examples -->
+    <h2 class="mb-4"><span class="badge bg-primary me-2">5</span>Simple Examples of Machine Learning Applications</h2>
+    <div class="row g-4">
+        <div class="col-md-3 col-6">
+            <div class="card h-100 text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="fs-2 mb-2">📧</div>
+                    <h6 class="fw-bold">Spam Detection</h6>
+                    <p class="small text-muted mb-0">Classifying emails as spam or not spam.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card h-100 text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="fs-2 mb-2">🎬</div>
+                    <h6 class="fw-bold">Recommendations</h6>
+                    <p class="small text-muted mb-0">Suggesting movies, products, or music based on preferences.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card h-100 text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="fs-2 mb-2">🏠</div>
+                    <h6 class="fw-bold">Price Prediction</h6>
+                    <p class="small text-muted mb-0">Estimating house or product prices from historical data.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card h-100 text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="fs-2 mb-2">🩺</div>
+                    <h6 class="fw-bold">Medical Diagnosis</h6>
+                    <p class="small text-muted mb-0">Helping detect diseases from medical images or test results.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="{{ url_for('types') }}" class="btn btn-primary">Next: Types of Machine Learning →</a>
+    </div>
 {% endblock %}
