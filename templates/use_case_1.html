@@ -3,6 +3,63 @@
 {% block title %}Use Case 1{% endblock %}
 
 {% block content %}
-    <h1>Use Case 1</h1>
-    <p class="text-muted">Content pending — owned by Manuel.</p>
+    <h1>Use Case 1: Early Disease Risk Detection</h1>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Problem Context</h5>
+            <p class="card-text">
+                Hospitals need to identify patients at high risk of developing
+                chronic conditions like diabetes or heart disease before symptoms
+                become severe. Traditional risk assessment relies on manual
+                review of patient history, which is slow and often misses subtle
+                patterns across multiple health indicators.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Data That Could Be Used</h5>
+            <p class="card-text">
+                Patient records including age, blood pressure, cholesterol
+                levels, glucose readings, BMI, family medical history, and
+                lifestyle factors such as smoking or physical activity.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">What the Model Should Predict, Classify, or Discover</h5>
+            <p class="card-text">
+                The model predicts the probability that a patient will develop
+                a specific condition within a defined time period, classifying
+                patients into risk categories (low, medium, high).
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Type of Machine Learning Applied</h5>
+            <p class="card-text">
+                <strong>Supervised Learning</strong> — historical patient data
+                with known diagnoses can be used as labeled examples to train
+                the model.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Potential Benefit</h5>
+            <p class="card-text">
+                Doctors can intervene earlier with preventive care, reducing
+                treatment costs and improving patient outcomes through timely
+                diagnosis.
+            </p>
+        </div>
+    </div>
+
 {% endblock %}
