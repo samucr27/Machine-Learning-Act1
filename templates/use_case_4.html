@@ -3,6 +3,63 @@
 {% block title %}Use Case 4{% endblock %}
 
 {% block content %}
-    <h1>Use Case 4</h1>
-    <p class="text-muted">Content pending — owned by Manuel.</p>
+    <h1>Use Case 4: Autonomous Vehicle Navigation</h1>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Problem Context</h5>
+            <p class="card-text">
+                Self-driving cars must make split-second decisions in
+                constantly changing traffic conditions, including avoiding
+                obstacles, following traffic rules, and adapting to
+                unpredictable driver or pedestrian behavior. Programming fixed
+                responses for every possible scenario is not feasible.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Data That Could Be Used</h5>
+            <p class="card-text">
+                Real-time sensor data from cameras, LIDAR, GPS, speed, and
+                surrounding vehicle positions, along with feedback from
+                previous driving decisions.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">What the Model Should Predict, Classify, or Discover</h5>
+            <p class="card-text">
+                The model learns the optimal action to take at each moment,
+                such as accelerating, braking, or turning, to safely reach a
+                destination.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Type of Machine Learning Applied</h5>
+            <p class="card-text">
+                <strong>Reinforcement Learning</strong> — the vehicle learns
+                through trial and error by receiving rewards for safe driving
+                and penalties for mistakes.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Potential Benefit</h5>
+            <p class="card-text">
+                Reduces traffic accidents caused by human error and improves
+                transportation efficiency, offering safer mobility for
+                passengers and pedestrians.
+            </p>
+        </div>
+    </div>
+
 {% endblock %}
