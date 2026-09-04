@@ -3,6 +3,39 @@
 {% block title %}Linear Regression — Concepts{% endblock %}
 
 {% block content %}
-    <h1>Linear Regression — Concepts</h1>
-    <p class="text-muted">Content pending — owned by Jonathan.</p>
+    <h1>Linear Regression Concepts</h1>
+
+    <br><br>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2 >What is Linear Regression?</h2>
+
+            <p class="lead-text mb-0"> Linear regression is a statistical modeling tool used in machine learning to predict 
+            a dependent variable based on a dataset provided to the system. 
+            It can be applied to a wide range of scenarios, from simple systems 
+            for tracking student grades to complex systems in finance and sports.
+            <br><br>
+            Linear regression is represented by line models that show the relationship between the dependent variable (Y) 
+            and the independent variable (X). 
+            For example, a model to predict a person’s weight based on their height. </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Types of Linear Regression</h3>
+
+            <img src="{{ url_for('static', filename='regresion.png') }}" style="display: block; margin: 0 auto; width: 80%;">  
+
+            <p class="lead-text mt-3 mb-0">
+                Linear regression can be <strong>simple</strong>, using a single independent variable to
+                predict the dependent variable, or <strong>multiple</strong>, using two or more independent
+                variables at once. The application built in this project uses simple linear regression,
+                since a single feature — daily temperature — is used to predict electricity consumption.
+            </p>
+        </div>
+    </div>
+
+
 {% endblock %}
