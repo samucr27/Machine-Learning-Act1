@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Concepts - Data with Roots{% endblock %}
+
+{% block content %}
+<div class="concepts-page">
+
+    <h1 class="mb-2">Machine Learning Concepts</h1>
+    <p class="text-muted lead-text mb-5">
+        Before looking at specific use cases or building a Linear Regression
+        model, it helps to establish a shared understanding of what Machine
+        Learning is and how it works at a basic level.
+    </p>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>What is Machine Learning?</h2>
+            <p class="lead-text mb-0">
+                Machine Learning is a branch of Artificial Intelligence
+                focused on building systems that learn patterns from data
+                rather than following rules written by hand. Instead of a
+                developer coding every case explicitly, an algorithm is
+                exposed to examples and gradually adjusts itself until it
+                can respond correctly to new situations on its own. The
+                logic of the program is not fixed in advance, it emerges
+                from the data during a process called <strong>training</strong>.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Main Purpose of Machine Learning</h2>
+            <p class="lead-text mb-0">
+                The goal is not to memorize the training examples, but to
+                <strong>generalize</strong> from them, to capture the
+                relationship between inputs and outputs well enough to make
+                correct predictions or decisions on data the model has
+                never seen before. That generalization is what makes the
+                resulting model useful in practice.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Data, Training, Models and Predictions</h2>
+            <p class="lead-text mb-4">
+                These four ideas describe the basic lifecycle of any
+                Machine Learning system:
+            </p>
+            <dl class="term-list row mb-4">
+                <div class="col-md-6">
+                    <dt>Data</dt>
+                    <dd>The raw examples collected from the real world, numbers, text, images, or any measurable information the model can learn from.</dd>
+                </div>
+                <div class="col-md-6">
+                    <dt>Training</dt>
+                    <dd>The process in which an algorithm analyzes the data and adjusts its parameters to capture the pattern between inputs and outputs.</dd>
+                </div>
+                <div class="col-md-6">
+                    <dt>Model</dt>
+                    <dd>The result of training: a mathematical representation of the pattern that was learned, ready to be used on new data.</dd>
+                </div>
+                <div class="col-md-6">
+                    <dt>Prediction</dt>
+                    <dd class="mb-0">The output the model produces when given a new, previously unseen input.</dd>
+                </div>
+            </dl>
+            <div class="pipeline-card border-top pt-3">
+                <span class="pipeline-step">Data</span>
+                <span class="pipeline-arrow mx-2">&rarr;</span>
+                <span class="pipeline-step">Training</span>
+                <span class="pipeline-arrow mx-2">&rarr;</span>
+                <span class="pipeline-step">Model</span>
+                <span class="pipeline-arrow mx-2">&rarr;</span>
+                <span class="pipeline-step">Prediction</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>The Importance of Data</h2>
+            <p class="lead-text mb-3">
+                Data is the foundation of every Machine Learning system, and
+                the quality of a model is limited by the quality of the data
+                it was trained on:
+            </p>
+            <dl class="term-list mb-0">
+                <dt>Quality</dt>
+                <dd>Clean, accurate, and consistent data produces more reliable models; errors in the data tend to show up as errors in the predictions.</dd>
+                <dt>Quantity</dt>
+                <dd>A larger and more varied set of examples generally helps a model generalize better to unfamiliar situations.</dd>
+                <dt>Relevance</dt>
+                <dd class="mb-0">The data has to actually relate to the problem being solved, unrelated data will not help the model learn the right pattern.</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-5">
+        <div class="card-body p-4">
+            <h2>Simple Examples in Practice</h2>
+            <ul class="lead-text mb-0">
+                <li class="mb-2"><strong>Spam filtering:</strong> classifying incoming emails as spam or legitimate based on patterns learned from previously labeled messages.</li>
+                <li class="mb-2"><strong>Recommendations:</strong> suggesting products, movies, or music based on patterns in a user's past behavior.</li>
+                <li class="mb-2"><strong>Price estimation:</strong> predicting the price of a house or product from historical sales data.</li>
+                <li class="mb-0"><strong>Medical diagnosis support:</strong> helping identify patterns in medical images or test results that may indicate a condition.</li>
+            </ul>
+        </div>
+    </div>
+
+    <a href="{{ url_for('types') }}" class="btn btn-outline-dark">Continue to Types of Machine Learning</a>
+
+</div>
+{% endblock %}

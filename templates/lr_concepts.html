@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Linear Regression — Concepts{% endblock %}
+
+{% block content %}
+    <h1>Linear Regression Concepts</h1>
+
+    <br><br>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2 >What is Linear Regression?</h2>
+
+            <p class="lead-text mb-0"> Linear regression is a statistical modeling tool used in machine learning to predict 
+            a dependent variable based on a dataset provided to the system. 
+            It can be applied to a wide range of scenarios, from simple systems 
+            for tracking student grades to complex systems in finance and sports.
+            <br><br>
+            Linear regression is represented by line models that show the relationship between the dependent variable (Y) 
+            and the independent variable (X). 
+            For example, a model to predict a person’s weight based on their height. </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Types of Linear Regression</h3>
+
+            <img src="{{ url_for('static', filename='regresion.png') }}" style="display: block; margin: 0 auto; width: 80%;">  
+
+            <p class="lead-text mt-3 mb-0">
+                Linear regression can be <strong>simple</strong>, using a single independent variable to
+                predict the dependent variable, or <strong>multiple</strong>, using two or more independent
+                variables at once. The application built in this project uses simple linear regression,
+                since a single feature (daily temperature) is used to predict electricity consumption.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>What Problems Can Linear Regression Solve?</h3>
+            <p class="lead-text">
+                Linear regression is useful whenever a numeric outcome seems to move consistently along
+                with another numeric factor. Some common use cases:
+            </p>
+
+            <div class="accordion" id="accordionProblems">
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingConsumption">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseConsumption"
+                                aria-expanded="false" aria-controls="collapseConsumption">
+                            Resource Consumption
+                        </button>
+                    </h2>
+                    <div id="collapseConsumption" class="accordion-collapse collapse"
+                         aria-labelledby="headingConsumption" data-bs-parent="#accordionProblems">
+                        <div class="accordion-body">
+                            Estimating how much electricity, water, or fuel will be consumed based on a
+                            condition such as temperature, occupancy, or time of year.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingPricing">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapsePricing"
+                                aria-expanded="false" aria-controls="collapsePricing">
+                            Price Estimation
+                        </button>
+                    </h2>
+                    <div id="collapsePricing" class="accordion-collapse collapse"
+                         aria-labelledby="headingPricing" data-bs-parent="#accordionProblems">
+                        <div class="accordion-body">
+                            Estimating the price of a house, a car, or a product based on one of its
+                            measurable characteristics, such as size, mileage, or weight.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingForecast">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseForecast"
+                                aria-expanded="false" aria-controls="collapseForecast">
+                            Trend Forecasting
+                        </button>
+                    </h2>
+                    <div id="collapseForecast" class="accordion-collapse collapse"
+                         aria-labelledby="headingForecast" data-bs-parent="#accordionProblems">
+                        <div class="accordion-body">
+                            Projecting future values, such as monthly sales or website traffic, based on
+                            how they have changed over time or alongside another measurable factor.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Independent Variable (X)</h3>
+            <p class="lead-text mb-0">
+                The independent variable is the input the model already knows. The value the user
+                provides or that is measured directly. It is called "independent" because its value does
+                not depend on any other variable in the model; it is the cause, or the input side, of the
+                relationship. In a graph, it is placed on the horizontal (X) axis. In this project, the
+                independent variable is the <strong>daily temperature</strong>.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Dependent Variable (Y)</h3>
+            <p class="lead-text mb-0">
+                The dependent variable is the value the model tries to predict. It is called "dependent"
+                because its value is assumed to depend on, or be explained by, the independent variable.
+                In a graph, it is placed on the vertical (Y) axis. In this project, the dependent variable
+                is the <strong>electricity consumption</strong>.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Relationship Between Variables</h3>
+            <p class="lead-text mb-0">
+                Linear regression assumes that X and Y move together in a roughly straight-line pattern:
+                as the independent variable increases, the dependent variable tends to increase (a positive
+                relationship) or decrease (a negative relationship) by a fairly consistent amount. Real data
+                is never perfectly aligned to a line; there is always some scatter, but the model looks
+                for the straight line that best summarizes that overall trend. In this project, the
+                relationship is negative: lower daily temperatures tend to come with higher electricity
+                consumption, most likely because heating systems work harder on colder days.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>The Regression Line</h3>
+            <p class="lead-text mb-0">
+                The regression line is the straight line that best fits the data points, minimizing the
+                overall distance between the line and each observed point. It is defined by the equation
+                <code>Y = mX + b</code>, where <code>m</code> is the slope (how much Y changes for each unit
+                increase in X) and <code>b</code> is the intercept (the value of Y when X is zero). This
+                line is what the model learns during training, and it becomes the tool used for prediction.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Prediction</h3>
+            <p class="lead-text mb-0">
+                Once the regression line has been calculated, making a prediction is simple: a new value of
+                X is plugged into the line's equation, and the corresponding Y is read off the line. This is
+                exactly what happens on the Application page. The user enters a new temperature value, and
+                the trained model returns the electricity consumption predicted by the line.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>A Simple Example</h3>
+            <p class="lead-text">
+                Imagine a small dataset relating hours studied (X) to exam score (Y):
+            </p>
+            <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item">1 hour studied → score of 52</li>
+                <li class="list-group-item">3 hours studied → score of 66</li>
+                <li class="list-group-item">5 hours studied → score of 79</li>
+                <li class="list-group-item">7 hours studied → score of 91</li>
+            </ul>
+            <p class="lead-text mb-0">
+                A linear regression model trained on these data points would find a line whose positive slope would indicate an increase of approximately
+                between 8 and 10 points in the score for each additional hour of study. If a new student
+                studies for 4 hours, the model predicts a score by reading the value of the line at X = 4, even though
+                that exact point was never present in the original data. This same principle reading a
+                predicted Y value from a learned line is what the model applies, on a larger scale, on the
+                “Application” page of this project. 
+            </p>
+        </div>
+    </div>
+
+    <a href="{{ url_for('lr_application') }}" class="btn btn-outline-dark">Continue to Linear Regression Application</a>
+
+
+
+{% endblock %}

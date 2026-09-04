@@ -1,87 +1,134 @@
 {% extends "base.html" %}
 
-{% block title %}Types of Machine Learning{% endblock %}
+{% block title %}Types of Machine Learning - Data with Roots{% endblock %}
 
 {% block content %}
-    <h1>Types of Machine Learning</h1>
+<div class="types-page">
 
-    <p>
-        There are different types of Machine Learning. Each type learns from data
-        in a different way. Below are the four main types.
-    </p>
-
-    <h2>1. Supervised Learning</h2>
-    <p>
-        In Supervised Learning, the computer learns from data that has labels.
-        A label is the correct answer. The computer sees many examples with
-        answers, and it learns to give answers for new data.
-    </p>
-    <p>
-        <strong>Characteristics:</strong> It needs labeled data. It learns to
-        predict a specific answer.
-    </p>
-    <p>
-        <strong>Example:</strong> An email app learns to detect spam. It looks
-        at many emails marked as "spam" or "not spam" and learns the pattern.
+    <h1 class="mb-2">Types of Machine Learning</h1>
+    <p class="text-muted lead-text mb-5">
+        Machine Learning algorithms are usually grouped into three broad
+        categories, depending on how the model learns from the data it is
+        given.
     </p>
 
-    <h2>2. Unsupervised Learning</h2>
-    <p>
-        In Unsupervised Learning, the computer learns from data without labels.
-        There are no correct answers. The computer finds patterns and groups
-        by itself.
-    </p>
-    <p>
-        <strong>Characteristics:</strong> It does not need labeled data. It finds
-        hidden patterns or groups in the data.
-    </p>
-    <p>
-        <strong>Example:</strong> A store studies customers and groups them by
-        their shopping habits, without knowing the groups in advance.
-    </p>
+    <div class="row g-4 mb-5">
+        <div class="col-lg-4">
+            <div class="card accent-card h-100">
+                <div class="card-body p-4">
+                    <h3>Supervised Learning</h3>
+                    <p class="mb-0">
+                        The model learns from a labeled dataset, where each
+                        example already includes the correct answer. The
+                        algorithm adjusts itself to reproduce that mapping
+                        between inputs and outputs.
+                    </p>
+                    <p class="type-label mb-0">Main characteristics</p>
+                    <p class="mb-0">
+                        Requires labeled data; performance can be measured
+                        directly against known answers; learns a specific
+                        input-to-output relationship.
+                    </p>
+                    <p class="type-label mb-0">Types of problems</p>
+                    <p class="mb-0">
+                        Regression (predicting a numeric value) and
+                        classification (assigning an item to a category).
+                    </p>
+                </div>
+            </div>
+        </div>
 
-        <h2>3. Semi-Supervised Learning</h2>
-    <p>
-        Semi-Supervised Learning is a mix between Supervised and Unsupervised
-        Learning. The computer learns from a small amount of labeled data and
-        a large amount of unlabeled data. It uses the labeled examples as a
-        guide to understand the patterns in the rest of the data.
-    </p>
-    <p>
-        <strong>Characteristics:</strong> It needs only a small set of labeled
-        data. It is useful when labeling data is expensive or takes a lot of
-        time.
-    </p>
-    <p>
-        <strong>Example:</strong> A voice recognition system learns from a few
-        labeled voice recordings and then uses many more unlabeled recordings
-        to improve its understanding of speech patterns.
-    </p>
-    <p>
-        <strong>Common uses:</strong> Voice analysis, fraud detection, and
-        medical research.
-    </p>
+        <div class="col-lg-4">
+            <div class="card accent-card h-100">
+                <div class="card-body p-4">
+                    <h3>Unsupervised Learning</h3>
+                    <p class="mb-0">
+                        The model works with unlabeled data and tries to
+                        find structure on its own (grouping, patterns, or
+                        relationships) without being told what the correct
+                        answer looks like.
+                    </p>
+                    <p class="type-label mb-0">Main characteristics</p>
+                    <p class="mb-0">
+                        No labeled outputs are provided; the model discovers
+                        structure rather than reproducing it; results are
+                        generally harder to evaluate objectively.
+                    </p>
+                    <p class="type-label mb-0">Types of problems</p>
+                    <p class="mb-0">
+                        Clustering (grouping similar items) and
+                        dimensionality reduction (simplifying data while
+                        keeping its structure).
+                    </p>
+                </div>
+            </div>
+        </div>
 
-    <h2>4. Reinforcement Learning</h2>
-    <p>
-        In Reinforcement Learning, the computer learns by trying different
-        actions and seeing what happens. It receives a reward when it does
-        something good, and a penalty when it does something wrong. Over time,
-        it learns the best actions to take to get the most rewards.
-    </p>
-    <p>
-        <strong>Characteristics:</strong> It learns through trial and error.
-        It does not need labeled data, but it needs an environment where it
-        can act and receive feedback.
-    </p>
-    <p>
-        <strong>Example:</strong> A robot learns to walk by trying different
-        movements. Each time it moves correctly, it receives a reward, and
-        this helps it improve over time.
-    </p>
-    <p>
-        <strong>Common uses:</strong> Robotics, video games, and resource
-        management.
-    </p>
+        <div class="col-lg-4">
+            <div class="card accent-card h-100">
+                <div class="card-body p-4">
+                    <h3>Reinforcement Learning</h3>
+                    <p class="mb-0">
+                        An agent learns by interacting with an environment,
+                        taking actions and receiving rewards or penalties.
+                        Over time it learns a strategy that maximizes the
+                        reward it accumulates.
+                    </p>
+                    <p class="type-label mb-0">Main characteristics</p>
+                    <p class="mb-0">
+                        Learns through trial and error; relies on a feedback
+                        signal rather than labeled examples; must balance
+                        trying new actions against using what already works.
+                    </p>
+                    <p class="type-label mb-0">Types of problems</p>
+                    <p class="mb-0">
+                        Sequential decision-making, such as game playing,
+                        robotics, and process control.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="card accent-card mb-5">
+        <div class="card-body p-4">
+            <h2>Comparison</h2>
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Type</th>
+                            <th scope="col">Data Used</th>
+                            <th scope="col">Goal</th>
+                            <th scope="col">Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Supervised</th>
+                            <td>Labeled data (input paired with the correct output)</td>
+                            <td>Predict an output for new inputs</td>
+                            <td>Predicting house prices</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Unsupervised</th>
+                            <td>Unlabeled data</td>
+                            <td>Find hidden patterns or groups</td>
+                            <td>Grouping customers by behavior</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Reinforcement</th>
+                            <td>Feedback from an environment (rewards and penalties)</td>
+                            <td>Learn the best sequence of actions</td>
+                            <td>Training a game-playing agent</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <a href="{{ url_for('use_case_1') }}" class="btn btn-outline-dark">Continue to Use Cases</a>
+
+</div>
 {% endblock %}

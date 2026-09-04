@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Linear Regression — Application{% endblock %}
+
+{% block content %}
+    <h1>Linear Regression Application</h1>
+
+    <br><br>
+
+    
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Problem Context</h2>
+            <p class="lead-text mb-0">
+                Electric utility companies want to anticipate how much electricity will be consumed on a
+                given day, so they can plan supply and manage costs. The phenomenon analyzed here is the
+                relationship between <strong>daily temperature</strong> and
+                <strong>electricity consumption</strong>: the data shows that consumption tends to rise on
+                colder days, most likely because heating systems are used more heavily as temperature drops.
+                Each row in the dataset represents one day, described by its average temperature (calculated
+                from the day's maximum and minimum readings) and the electricity consumed that day. The
+                purpose of applying Linear Regression here is to learn the general trend behind that
+                relationship, so that the model can predict how much electricity will be consumed per day based 
+                on the value it is trying to predict, using only the forecast temperature.
+            </p>
+        </div>
+    </div>
+
+    
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Variables</h2>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <strong>Independent Variable (X):</strong> Daily Temperature 
+                    <br></br>How hot or cold the day was on average, 
+                    in degrees Celsius (°C). This is the input the model uses to make its prediction.
+                </li>
+                <li class="list-group-item">
+                    <strong>Dependent Variable (Y):</strong> Electricity Consumption 
+                    <br></br>How much electricity was used that day, in kilowatt-hours (kWh/day). 
+                    This is the value the model tries to predict.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Dataset</h2>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Number of records:</strong> {{ dataset_info.n_records }}</li>
+                <li class="list-group-item"><strong>Independent variable:</strong> {{ dataset_info.independent_variable }} ({{ dataset_info.independent_unit }})</li>
+                <li class="list-group-item"><strong>Dependent variable:</strong> {{ dataset_info.dependent_variable }} ({{ dataset_info.dependent_unit }})</li>
+                <li class="list-group-item"><strong>Source:</strong> {{ dataset_info.source }}</li>
+            </ul>
+        </div>
+    </div>
+ 
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Data Visualization</h2>
+            <p class="lead-text">
+                The chart below plots every day in the dataset as a point (temperature vs. consumption),
+                along with the regression line learned by the model.
+            </p>
+            <img src="data:image/png;base64,{{ plot_url }}"
+                 alt="Scatter plot of daily temperature vs. electricity consumption with regression line"
+                 style="display: block; margin: 0 auto; width: 100%; max-width: 700px;">
+        </div>
+    </div>
+ 
+ 
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Linear Regression Model</h2>
+            <p class="lead-text">
+                A <code>LinearRegression</code> model from scikit-learn was trained on the
+                {{ dataset_info.n_records }} records described above. The model learned the following
+                equation:
+            </p>
+            <p class="lead-text mb-0 text-center">
+                <code>Consumption (kWh/day) = {{ dataset_info.intercept }} + {{ dataset_info.slope }} &times; Temperature (°C)</code>
+            </p>
+            <p class="lead-text mt-3 mb-0">
+                Model fit (R² score on the training data): <strong>{{ dataset_info.r2_score }}</strong>
+            </p>
+        </div>
+    </div>
+ 
+    
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Try a Prediction</h2>
+            <p class="lead-text">
+                Enter an expected daily temperature (°C) to see the electricity consumption predicted by
+                the trained model.
+            </p>
+ 
+            <form method="POST" action="{{ url_for('lr_application') }}" class="row g-3 align-items-end" novalidate>
+                <div class="col-sm-8">
+                    <label for="temperature" class="form-label">Daily Temperature (°C)</label>
+                    <input
+                        type="number"
+                        step="any"
+                        class="form-control {% if error %}is-invalid{% endif %}"
+                        id="temperature"
+                        name="temperature"
+                        placeholder="e.g. 5 (range in data: -11°C to 33°C)"
+                        value="{{ submitted_value if submitted_value is not none else '' }}"
+                        required
+                    >
+                    {% if error %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-sm-4">
+                    <button type="submit" class="btn btn-primary w-100">Predict Consumption</button>
+                </div>
+            </form>
+ 
+            {% if prediction is not none %}
+                <div class="alert alert-success mt-4 mb-0">
+                    Estimated consumption for a day at <strong>{{ submitted_value }}°C</strong>:
+                    <strong>{{ prediction }} kWh/day</strong>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+        <a href="{{ url_for('home') }}" class="btn btn-outline-dark">Back to the top</a>
+
+ 
+{% endblock %}

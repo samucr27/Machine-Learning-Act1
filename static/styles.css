@@ -1,37 +1,93 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #1e1e1e;
-    color: #e0e0e0;
-    margin: 0;
+    background-color: #f8f9fa;
 }
 
-nav {
-    background-color: #2b2b2b;
-    padding: 15px 30px;
-    display: flex;
-    gap: 25px;
+.navbar-brand {
+    letter-spacing: 0.5px;
 }
 
-nav a {
-    color: #4fc3f7;
-    text-decoration: none;
-    font-weight: bold;
+.card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-nav a:hover {
-    text-decoration: underline;
+/* --- Concepts page --- */
+.concepts-page {
+    --accent: #3B6E5C;
+}
+.concepts-page .accent-card {
+    border-left: 3px solid var(--accent);
+}
+.concepts-page h2 {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+.concepts-page .lead-text {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    max-width: 68ch;
+}
+.concepts-page .term-list dt {
+    font-weight: 600;
+    color: #212529;
+}
+.concepts-page .term-list dd {
+    color: #5a6268;
+    max-width: 62ch;
+    margin-bottom: 1rem;
+}
+.concepts-page .pipeline-card {
+    text-align: center;
+}
+.concepts-page .pipeline-step {
+    font-weight: 600;
+    color: var(--accent);
+}
+.concepts-page .pipeline-arrow {
+    color: #adb5bd;
+    font-size: 1.2rem;
 }
 
-main {
-    padding: 30px;
-    max-width: 900px;
-    margin: 0 auto;
+/* --- Types page --- */
+.types-page {
+    --accent: #8B5E34;
+}
+.types-page .accent-card {
+    border-left: 3px solid var(--accent);
+}
+.types-page h2 {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+.types-page h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 0.9rem;
+}
+.types-page .lead-text {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    max-width: 68ch;
+}
+.types-page .type-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-top: 1rem;
+    margin-bottom: 0.35rem;
+}
+.types-page .table thead th {
+    color: var(--accent);
+    border-bottom-width: 2px;
+    font-weight: 600;
 }
 
-h1 {
-    color: #4fc3f7;
-}
-
-h2 {
-    color: #4fc3f7;
+/* Let card text use the full card width instead of the ch-based limit */
+.concepts-page .accent-card .lead-text,
+.concepts-page .accent-card .term-list dd,
+.types-page .accent-card p {
+    max-width: none;
 }

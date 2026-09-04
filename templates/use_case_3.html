@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Use Case 3{% endblock %}
+
+{% block content %}
+    <h1>Use Case 3: Personalized Product Recommendations</h1>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Problem Context</h5>
+            <p class="card-text">
+                Online stores offer thousands of products, making it hard for
+                customers to find items that match their interests. Without
+                guidance, customers may leave the platform without purchasing,
+                resulting in lost sales opportunities.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Data That Could Be Used</h5>
+            <p class="card-text">
+                Customer browsing history, past purchases, product ratings,
+                time spent on product pages, and similar customers' purchasing
+                patterns.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">What the Model Should Predict, Classify, or Discover</h5>
+            <p class="card-text">
+                The model discovers hidden relationships between products and
+                customer preferences to generate personalized product
+                suggestions for each user.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Type of Machine Learning Applied</h5>
+            <p class="card-text">
+                <strong>Unsupervised Learning</strong> — the model groups
+                customers and products based on similarity patterns without
+                needing predefined labels.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Potential Benefit</h5>
+            <p class="card-text">
+                Stores increase sales and customer satisfaction by showing
+                relevant products, while customers save time finding what they
+                actually want.
+            </p>
+        </div>
+    </div>
+
+        <a href="{{ url_for('use_case_4') }}" class="btn btn-outline-dark">Continue to Use Case 4</a>
+
+{% endblock %}

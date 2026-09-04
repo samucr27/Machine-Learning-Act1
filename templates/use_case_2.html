@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Use Case 2{% endblock %}
+
+{% block content %}
+    <h1>Use Case 2: Fraud Detection in Banking Transactions</h1>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Problem Context</h5>
+            <p class="card-text">
+                Financial institutions process millions of transactions daily,
+                and fraudulent activity is constantly evolving to avoid
+                detection. Manually reviewing every transaction is impossible,
+                and fixed rule-based systems fail to catch new fraud patterns.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Data That Could Be Used</h5>
+            <p class="card-text">
+                Transaction amount, location, time of day, merchant category,
+                device used, and the customer's historical spending behavior.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">What the Model Should Predict, Classify, or Discover</h5>
+            <p class="card-text">
+                The model classifies each transaction as legitimate or
+                potentially fraudulent, flagging suspicious activity in real
+                time.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Type of Machine Learning Applied</h5>
+            <p class="card-text">
+                <strong>Supervised Learning</strong> — past transactions
+                labeled as fraudulent or legitimate provide the training data
+                needed to recognize similar patterns.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Potential Benefit</h5>
+            <p class="card-text">
+                Banks can prevent financial losses and protect customers from
+                unauthorized charges while reducing false alarms that
+                frustrate legitimate users.
+            </p>
+        </div>
+    </div>
+
+        <a href="{{ url_for('use_case_3') }}" class="btn btn-outline-dark">Continue to Use Case 3</a>
+
+{% endblock %}
