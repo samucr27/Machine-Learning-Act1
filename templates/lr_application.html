@@ -3,6 +3,46 @@
 {% block title %}Linear Regression — Application{% endblock %}
 
 {% block content %}
-    <h1>Linear Regression — Application</h1>
-    <p class="text-muted">Content pending — owned by Jonathan.</p>
+    <h1>Linear Regression Application</h1>
+
+    <br><br>
+
+    
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Problem Context</h2>
+            <p class="lead-text mb-0">
+                Electric utility companies want to anticipate how much electricity will be consumed on a
+                given day, so they can plan supply and manage costs. The phenomenon analyzed here is the
+                relationship between <strong>daily temperature</strong> and
+                <strong>electricity consumption</strong>: the data shows that consumption tends to rise on
+                colder days, most likely because heating systems are used more heavily as temperature drops.
+                Each row in the dataset represents one day, described by its average temperature (calculated
+                from the day's maximum and minimum readings) and the electricity consumed that day. The
+                purpose of applying Linear Regression here is to learn the general trend behind that
+                relationship, so that the model can predict how much electricity will be consumed per day based 
+                on the value it is trying to predict, using only the forecast temperature.
+            </p>
+        </div>
+    </div>
+
+    
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Variables</h2>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <strong>Independent Variable (X):</strong> Daily Temperature 
+                    <br></br>How hot or cold the day was on average, 
+                    in degrees Celsius (°C). This is the input the model uses to make its prediction.
+                </li>
+                <li class="list-group-item">
+                    <strong>Dependent Variable (Y):</strong> Electricity Consumption 
+                    <br></br>How much electricity was used that day, in kilowatt-hours (kWh/day). 
+                    This is the value the model tries to predict.
+                </li>
+            </ul>
+        </div>
+    </div>
+
 {% endblock %}
