@@ -40,3 +40,52 @@ DATASET_INFO = {
 
 
 
+def get_plot_base64() -> str:
+    
+    fig, ax = plt.subplots(figsize=(8, 5), dpi=110)
+
+    ax.scatter(
+        df["temperature_c"], df["consumption_kwh"],
+        alpha=0.4, s=14, color="#4C72B0", label="Observed data"
+    )
+
+   
+    x_line = pd.DataFrame(
+        {"temperature_c": [df["temperature_c"].min(), df["temperature_c"].max()]}
+    )
+    y_line = MODEL.predict(x_line)
+    ax.plot(
+        x_line["temperature_c"], y_line,
+        color="#C44E52", linewidth=2.5, label="Regression line"
+    )
+
+    ax.set_title("Electricity Consumption vs. Daily Temperature (Linear Regression)", fontsize=12)
+    ax.set_xlabel("Daily Temperature (°C)", fontsize=11)
+    ax.set_ylabel("Electricity Consumption (kWh/day)", fontsize=11)
+    ax.legend()
+    ax.grid(alpha=0.25)
+    fig.tight_layout()
+
+    buffer = io.BytesIO()
+    fig.savefig(buffer, format="png")
+    plt.close(fig)
+    buffer.seek(0)
+
+    return base64.b64encode(buffer.read()).decode("utf-8")
+
+
+
+def predict_consumption(temperature_c: float) -> float:
+   
+    prediction = MODEL.predict(pd.DataFrame({"temperature_c": [temperature_c]}))
+    return round(float(prediction[0]), 2)
+
+
+if __name__ == "__main__":
+    
+    print("Dataset info:", DATASET_INFO)
+    print("Prediction for 10 C:", predict_consumption(10), "kWh/day")
+    print("Prediction for 25 C:", predict_consumption(25), "kWh/day")
+    b64 = get_plot_base64()
+    print("Plot base64 length:", len(b64))
+
