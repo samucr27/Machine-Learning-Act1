@@ -37,5 +37,111 @@
         </div>
     </div>
 
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>What Problems Can Linear Regression Solve?</h3>
+            <p class="lead-text">
+                Linear regression is useful whenever a numeric outcome seems to move consistently along
+                with another numeric factor. Some common use cases:
+            </p>
+
+            <div class="accordion" id="accordionProblems">
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingConsumption">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseConsumption"
+                                aria-expanded="false" aria-controls="collapseConsumption">
+                            Resource Consumption
+                        </button>
+                    </h2>
+                    <div id="collapseConsumption" class="accordion-collapse collapse"
+                         aria-labelledby="headingConsumption" data-bs-parent="#accordionProblems">
+                        <div class="accordion-body">
+                            Estimating how much electricity, water, or fuel will be consumed based on a
+                            condition such as temperature, occupancy, or time of year — exactly the case
+                            used in this project's Application page.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingPricing">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapsePricing"
+                                aria-expanded="false" aria-controls="collapsePricing">
+                            Price Estimation
+                        </button>
+                    </h2>
+                    <div id="collapsePricing" class="accordion-collapse collapse"
+                         aria-labelledby="headingPricing" data-bs-parent="#accordionProblems">
+                        <div class="accordion-body">
+                            Estimating the price of a house, a car, or a product based on one of its
+                            measurable characteristics, such as size, mileage, or weight.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingForecast">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseForecast"
+                                aria-expanded="false" aria-controls="collapseForecast">
+                            Trend Forecasting
+                        </button>
+                    </h2>
+                    <div id="collapseForecast" class="accordion-collapse collapse"
+                         aria-labelledby="headingForecast" data-bs-parent="#accordionProblems">
+                        <div class="accordion-body">
+                            Projecting future values, such as monthly sales or website traffic, based on
+                            how they have changed over time or alongside another measurable factor.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Independent Variable (X)</h3>
+            <p class="lead-text mb-0">
+                The independent variable is the input the model already knows — the value the user
+                provides or that is measured directly. It is called "independent" because its value does
+                not depend on any other variable in the model; it is the cause, or the input side, of the
+                relationship. In a graph, it is placed on the horizontal (X) axis. In this project, the
+                independent variable is the <strong>daily temperature</strong>.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Dependent Variable (Y)</h3>
+            <p class="lead-text mb-0">
+                The dependent variable is the value the model tries to predict. It is called "dependent"
+                because its value is assumed to depend on, or be explained by, the independent variable.
+                In a graph, it is placed on the vertical (Y) axis. In this project, the dependent variable
+                is the <strong>electricity consumption</strong>.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Relationship Between Variables</h3>
+            <p class="lead-text mb-0">
+                Linear regression assumes that X and Y move together in a roughly straight-line pattern:
+                as the independent variable increases, the dependent variable tends to increase (a positive
+                relationship) or decrease (a negative relationship) by a fairly consistent amount. Real data
+                is never perfectly aligned to a line — there is always some scatter — but the model looks
+                for the straight line that best summarizes that overall trend. In this project, the
+                relationship is negative: lower daily temperatures tend to come with higher electricity
+                consumption, most likely because heating systems work harder on colder days.
+            </p>
+        </div>
+    </div>
+
 
 {% endblock %}
