@@ -45,4 +45,31 @@
         </div>
     </div>
 
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Dataset</h2>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Number of records:</strong> {{ dataset_info.n_records }}</li>
+                <li class="list-group-item"><strong>Independent variable:</strong> {{ dataset_info.independent_variable }} ({{ dataset_info.independent_unit }})</li>
+                <li class="list-group-item"><strong>Dependent variable:</strong> {{ dataset_info.dependent_variable }} ({{ dataset_info.dependent_unit }})</li>
+                <li class="list-group-item"><strong>Source:</strong> {{ dataset_info.source }}</li>
+            </ul>
+        </div>
+    </div>
+ 
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Data Visualization</h2>
+            <p class="lead-text">
+                The chart below plots every day in the dataset as a point (temperature vs. consumption),
+                along with the regression line learned by the model.
+            </p>
+            <img src="data:image/png;base64,{{ plot_url }}"
+                 alt="Scatter plot of daily temperature vs. electricity consumption with regression line"
+                 style="display: block; margin: 0 auto; width: 100%; max-width: 700px;">
+        </div>
+    </div>
+ 
 {% endblock %}

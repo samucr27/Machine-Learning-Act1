@@ -26,7 +26,7 @@ R2_SCORE = round(r2_score(y, _predictions_on_training_data), 4)
 DATASET_INFO = {
     "n_records": len(df),
     "independent_variable": "Daily Temperature",
-    "independent_unit": "degrees Celsius (°C) — average of the day's max and min temperature",
+    "independent_unit": "degrees Celsius (°C) average of the day's max and min temperature",
     "dependent_variable": "Electricity Consumption",
     "dependent_unit": "kWh/day",
     "source": "Real data from the Kaggle dataset \"Electricity Consumption Based On "
