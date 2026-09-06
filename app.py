@@ -5,6 +5,18 @@ Flask App - Universidad de Cundinamarca - Systems and Computing Engineering
 
 from flask import Flask, render_template, request
 from Lr_model import DATASET_INFO, get_plot_base64, predict_consumption
+from LogReg_model import (
+    DATASET_INFO as LOGREG_INFO,
+    get_plot_base64 as logreg_plot,
+    predict_risk,
+    EVAL_METRICS as LOGREG_METRICS,
+)
+from ExtraTrees_model import (
+    DATASET_INFO as ET_INFO,
+    get_plot_base64 as et_plot,
+    predict_class as et_predict,
+    EVAL_METRICS as ET_METRICS,
+)
 
 app = Flask(__name__)
 
@@ -81,6 +93,84 @@ def lr_application():
         submitted_value=submitted_value,
         error=error,
     )
+
+
+# ---------- Supervised: Logistic Regression (Manuel) ----------
+@app.route("/logistic-regression/concepts")
+def logreg_concepts():
+    return render_template("logreg_concepts.html")
+
+
+@app.route("/logistic-regression/application", methods=["GET", "POST"])
+def logreg_application():
+    prediction = None
+    submitted_value = None
+    error = None
+
+    if request.method == "POST":
+        raw_value = request.form.get("cholesterol", "").strip()
+        submitted_value = raw_value
+
+        if raw_value == "":
+            error = "Please enter a cholesterol value."
+        else:
+            try:
+                cholesterol = float(raw_value)
+                prediction = predict_risk(cholesterol)
+                submitted_value = cholesterol
+            except ValueError:
+                error = "Please enter a valid number."
+
+    return render_template(
+        "logreg_application.html",
+        dataset_info=LOGREG_INFO,
+        plot_url=logreg_plot(),
+        prediction=prediction,
+        submitted_value=submitted_value,
+        error=error,
+    )
+
+
+@app.route("/logistic-regression/evaluation-metrics")
+def logreg_evaluation():
+    return render_template("logreg_evaluation.html", metrics=LOGREG_METRICS)
+
+
+# ---------- Supervised: Extra Trees Classifier (Jonathan) ----------
+@app.route("/extra-trees/concepts")
+def et_concepts():
+    return render_template("et_concepts.html")
+
+
+@app.route("/extra-trees/application", methods=["GET", "POST"])
+def et_application():
+    prediction = None
+    form_values = {}
+    error = None
+
+    if request.method == "POST":
+        try:
+            var1 = float(request.form.get("var1", "").strip())
+            var2 = float(request.form.get("var2", "").strip())
+            var3 = float(request.form.get("var3", "").strip())
+            form_values = {"var1": var1, "var2": var2, "var3": var3}
+            prediction = et_predict(var1, var2, var3)
+        except (ValueError, TypeError):
+            error = "Please enter valid numeric values for all fields."
+
+    return render_template(
+        "et_application.html",
+        dataset_info=ET_INFO,
+        plot_url=et_plot(),
+        prediction=prediction,
+        form_values=form_values,
+        error=error,
+    )
+
+
+@app.route("/extra-trees/evaluation-metrics")
+def et_evaluation():
+    return render_template("et_evaluation.html", metrics=ET_METRICS)
 
 
 if __name__ == "__main__":
