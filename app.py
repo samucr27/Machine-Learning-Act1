@@ -8,12 +8,14 @@ from Lr_model import DATASET_INFO, get_plot_base64, predict_consumption
 from LogReg_model import (
     DATASET_INFO as LOGREG_INFO,
     get_plot_base64 as logreg_plot,
+    get_confusion_matrix_plot_base64 as logreg_cm_plot,
     predict_risk,
     EVAL_METRICS as LOGREG_METRICS,
 )
 from ExtraTrees_model import (
     DATASET_INFO as ET_INFO,
     get_plot_base64 as et_plot,
+    get_confusion_matrix_plot_base64 as et_cm_plot,
     predict_class as et_predict,
     EVAL_METRICS as ET_METRICS,
 )
@@ -59,7 +61,7 @@ def use_case_4():
     return render_template("use_case_4.html")
 
 
-# ---------- Supervised: Linear Regression (Jonathan) ----------
+# ---------- Supervised: Linear Regression (Jonathan, Activity 1) ----------
 @app.route("/linear-regression/concepts")
 def lr_concepts():
     return render_template("lr_concepts.html")
@@ -95,7 +97,7 @@ def lr_application():
     )
 
 
-# ---------- Supervised: Logistic Regression (Manuel) ----------
+# ---------- Supervised: Logistic Regression (Manuel, Activity 2) ----------
 @app.route("/logistic-regression/concepts")
 def logreg_concepts():
     return render_template("logreg_concepts.html")
@@ -133,10 +135,14 @@ def logreg_application():
 
 @app.route("/logistic-regression/evaluation-metrics")
 def logreg_evaluation():
-    return render_template("logreg_evaluation.html", metrics=LOGREG_METRICS)
+    return render_template(
+        "logreg_evaluation.html",
+        metrics=LOGREG_METRICS,
+        confusion_plot=logreg_cm_plot(),
+    )
 
 
-# ---------- Supervised: Extra Trees Classifier (Jonathan) ----------
+# ---------- Supervised: Extra Trees Classifier (Jonathan, Activity 2) ----------
 @app.route("/extra-trees/concepts")
 def et_concepts():
     return render_template("et_concepts.html")
@@ -170,7 +176,11 @@ def et_application():
 
 @app.route("/extra-trees/evaluation-metrics")
 def et_evaluation():
-    return render_template("et_evaluation.html", metrics=ET_METRICS)
+    return render_template(
+        "et_evaluation.html",
+        metrics=ET_METRICS,
+        confusion_plot=et_cm_plot(),
+    )
 
 
 if __name__ == "__main__":
