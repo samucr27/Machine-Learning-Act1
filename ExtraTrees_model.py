@@ -74,3 +74,80 @@ EVAL_METRICS = {
     "f1_score": round(_report_dict["weighted avg"]["f1-score"], 4),
     "classification_report": classification_report(y_test, _y_pred_test, zero_division=0),
 }
+
+
+ 
+
+def get_plot_base64() -> str:
+    fig, ax = plt.subplots(figsize=(8, 5), dpi=110)
+ 
+    for cls, color in [(0, "#4C72B0"), (1, "#C44E52")]:
+        subset = df[df[COL_Y] == cls]
+        ax.scatter(
+            subset[COL_CHOL], subset[COL_AGE],
+            alpha=0.5, s=16, color=color, label=CLASS_LABELS[cls]
+        )
+ 
+    ax.set_title("Heart Disease Risk by Cholesterol and Age", fontsize=12)
+    ax.set_xlabel("Cholesterol (mg/dL)", fontsize=11)
+    ax.set_ylabel("Age (years)", fontsize=11)
+    ax.legend(title="Class")
+    ax.grid(alpha=0.25)
+    fig.tight_layout()
+ 
+    buffer = io.BytesIO()
+    fig.savefig(buffer, format="png")
+    plt.close(fig)
+    buffer.seek(0)
+ 
+    return base64.b64encode(buffer.read()).decode("utf-8")
+ 
+
+def get_confusion_matrix_plot_base64() -> str:
+    cm = confusion_matrix(y_test, _y_pred_test)
+ 
+    fig, ax = plt.subplots(figsize=(5, 4.5), dpi=110)
+    sns.heatmap(
+        cm, annot=True, fmt="d", cmap="Blues", cbar=False,
+        xticklabels=["Low Risk", "High Risk"],
+        yticklabels=["Low Risk", "High Risk"],
+        ax=ax,
+    )
+    ax.set_xlabel("Predicted")
+    ax.set_ylabel("Actual")
+    ax.set_title("Confusion Matrix — Extra Trees Classifier")
+    fig.tight_layout()
+ 
+    buffer = io.BytesIO()
+    fig.savefig(buffer, format="png")
+    plt.close(fig)
+    buffer.seek(0)
+ 
+    return base64.b64encode(buffer.read()).decode("utf-8")
+ 
+ 
+
+def predict_class(chol: float, age: float, trestbps: float, thalach: float) -> dict:
+    row = pd.DataFrame({
+        COL_CHOL: [chol],
+        COL_AGE: [age],
+        COL_TRESTBPS: [trestbps],
+        COL_THALACH: [thalach],
+    })
+    row_scaled = SCALER.transform(row)
+    predicted_class = int(MODEL.predict(row_scaled)[0])
+    proba = MODEL.predict_proba(row_scaled)[0]
+    return {
+        "class": predicted_class,
+        "label": CLASS_LABELS[predicted_class],
+        "probability": round(float(proba[predicted_class]), 4),
+    }
+ 
+ 
+if __name__ == "__main__":
+    print("Dataset info:", DATASET_INFO)
+    print("Eval metrics:", {k: v for k, v in EVAL_METRICS.items() if k != "classification_report"})
+    print("Prediction (chol=280, age=60, trestbps=150, thalach=120):",
+          predict_class(280, 60, 150, 120))
+    print("Prediction (chol=180, age=35, trestbps=110, thalach=170):",
+          predict_class(180, 35, 110, 170))
