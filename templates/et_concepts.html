@@ -104,6 +104,76 @@
                 </div>
         </div>
     </div>
+    
 
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Main Characteristics</h3>
+            <div class="list-group list-group-flush">
+                <div class="list-group-item d-flex align-items-center gap-2">
+                    <span class="badge" style="background-color:#6f4e37;">Ensemble</span>
+                    <span class="lead-text mb-0">Combines many decision trees into one model.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-center gap-2">
+                    <span class="badge" style="background-color:#6f4e37;">Randomized</span>
+                    <span class="lead-text mb-0">Chooses split thresholds at random instead of searching for the best one.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-center gap-2">
+                    <span class="badge" style="background-color:#6f4e37;">Full-Data Trees</span>
+                    <span class="lead-text mb-0">Each tree trains on the full dataset, unlike Random Forest.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-center gap-2">
+                    <span class="badge" style="background-color:#6f4e37;">Interpretable Importances</span>
+                    <span class="lead-text mb-0">Reports which features mattered most to its decisions.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-center gap-2">
+                    <span class="badge" style="background-color:#6f4e37;">Flexible Input</span>
+                    <span class="lead-text mb-0">Works with numeric and categorical features, with little preprocessing.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="p-3 rounded" style="background-color: #f5ebe0; border-left: 4px solid #6f4e37;">
+                        <h3 style="color:#4e342e;">Advantages</h3>
+                        <ul class="lead-text mb-0">
+                            <li>Reduces overfitting compared to a single decision tree.</li>
+                            <li>Trains faster than Random Forest, since splits are picked at random.</li>
+                            <li>Handles high-dimensional and mixed-scale data well.</li>
+                            <li>Reports feature importance for easier interpretation.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 rounded" style="background-color: #e8dcd0; border-left: 4px solid #4e342e;">
+                        <h3 style="color:#4e342e;">Limitations</h3>
+                        <ul class="lead-text mb-0">
+                            <li>Harder to interpret than a single decision tree.</li>
+                            <li>Needs more memory and more trees for its best performance.</li>
+                            <li>Random splits can sometimes miss the strongest possible split.</li>
+                            <li>Performance still depends on the quality of the input features.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>A Real-World Example</h3>
+            <p class="lead-text mb-0">
+                A hospital wants to flag patients at higher risk of heart disease. It has routine clinical
+                measurements: cholesterol level, age, resting blood pressure, and maximum heart rate
+                achieved during a stress test. An Extra Trees Classifier can be trained on historical patient
+                records to learn the pattern across these measurements. It then classifies a new patient as
+                Low Risk or High Risk. This is the case implemented in the Application page.
+            </p>
+        </div>
+    </div>
 
 {% endblock %}
