@@ -51,15 +51,15 @@ DATASET_INFO = {
     "n_train": len(X_train),
     "n_test": len(X_test),
     "independent_variables": [
-        "Cholesterol (chol) — serum cholesterol in mg/dL",
-        "Age (age) — in years",
-        "Resting Blood Pressure (trestbps) — in mm Hg",
-        "Maximum Heart Rate Achieved (thalach) — in bpm",
+        "Cholesterol (chol) : serum cholesterol in mg/dL",
+        "Age (age) : in years",
+        "Resting Blood Pressure (trestbps) : in mm Hg",
+        "Maximum Heart Rate Achieved (thalach) : in bpm",
     ],
     "dependent_variable": "Heart Disease Risk (target)",
     "classes": "0 = Low Risk, 1 = High Risk",
     "source": "Heart Disease dataset (Cleveland, Hungary, Switzerland, and Long Beach V "
-              "databases, 1988) — the classic UCI Heart Disease dataset "
+              "databases, 1988) the classic UCI Heart Disease dataset "
               "(archive.ics.uci.edu/dataset/45/heart+disease), widely redistributed on Kaggle. "
               "Only the 4 variables used by this model are kept in heart.csv.",
 }
