@@ -150,17 +150,23 @@ def et_concepts():
 
 @app.route("/extra-trees/application", methods=["GET", "POST"])
 def et_application():
-    prediction = None
+    result = None
     form_values = {}
     error = None
 
     if request.method == "POST":
         try:
-            var1 = float(request.form.get("var1", "").strip())
-            var2 = float(request.form.get("var2", "").strip())
-            var3 = float(request.form.get("var3", "").strip())
-            form_values = {"var1": var1, "var2": var2, "var3": var3}
-            prediction = et_predict(var1, var2, var3)
+            chol = float(request.form.get("chol", "").strip())
+            age = float(request.form.get("age", "").strip())
+            trestbps = float(request.form.get("trestbps", "").strip())
+            thalach = float(request.form.get("thalach", "").strip())
+            form_values = {
+                "chol": chol,
+                "age": age,
+                "trestbps": trestbps,
+                "thalach": thalach,
+            }
+            result = et_predict(chol, age, trestbps, thalach)
         except (ValueError, TypeError):
             error = "Please enter valid numeric values for all fields."
 
@@ -168,7 +174,7 @@ def et_application():
         "et_application.html",
         dataset_info=ET_INFO,
         plot_url=et_plot(),
-        prediction=prediction,
+        result=result,
         form_values=form_values,
         error=error,
     )
