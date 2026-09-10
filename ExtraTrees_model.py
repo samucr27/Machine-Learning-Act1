@@ -1,13 +1,3 @@
-"""
-Extra Trees Classifier module - Activity 2, Part 2
-Topic and variables: TODO (Jonathan) - define with the team, needs 3+ independent variables.
-
-TODO (Jonathan): replace DATASET_PATH with the real CSV once downloaded, and
-update COL_X1 / COL_X2 / COL_X3 / COL_Y to match your chosen dataset's columns
-(add more COL_X* if you use more than 3 variables). Until then, this module
-generates a synthetic placeholder dataset so the rest of the team (and the
-deployed app) is never broken while you work.
-"""
 
 import io
 import os
