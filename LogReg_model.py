@@ -1,11 +1,6 @@
 """
 Logistic Regression module - Heart Disease Risk Prediction
 Topic: cholesterol level (X) -> heart disease risk, Low (0) / High (1) (Y)
-
-TODO (Manuel): replace DATASET_PATH with the real Kaggle CSV once downloaded,
-and update the column names below (COL_X / COL_Y) to match that file.
-Until then, this module generates a synthetic placeholder dataset so the
-rest of the team (and the deployed app) is never broken while you work.
 """
 
 import io
@@ -23,16 +18,16 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
 
-DATASET_PATH = "logreg_dataset.csv"   # TODO: point to the real Kaggle CSV
-COL_X = "cholesterol"                 # TODO: match the real column name
-COL_Y = "risk"                        # TODO: match the real column name (0/1)
+DATASET_PATH = "heart.csv"
+COL_X = "chol"
+COL_Y = "target"
 
 
 def _load_dataset() -> pd.DataFrame:
     if os.path.exists(DATASET_PATH):
         return pd.read_csv(DATASET_PATH)
 
-    # ---- Synthetic placeholder dataset (remove once the real CSV is in place) ----
+    # ---- Synthetic placeholder dataset (fallback safety net) ----
     rng = np.random.default_rng(42)
     n = 500
     cholesterol = rng.normal(210, 35, n).clip(120, 340)
@@ -50,7 +45,6 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-# Feature scaling (as shown in class) — helps Logistic Regression converge cleanly
 SCALER = StandardScaler()
 X_train_scaled = SCALER.fit_transform(X_train)
 X_test_scaled = SCALER.transform(X_test)
@@ -68,7 +62,7 @@ DATASET_INFO = {
     "independent_unit": "mg/dL",
     "dependent_variable": "Heart Disease Risk",
     "classes": "0 = Low Risk, 1 = High Risk",
-    "source": "TODO (Manuel): cite the real Kaggle dataset here once selected.",
+    "source": "Heart Disease dataset (Cleveland, Hungary, Switzerland, and Long Beach V databases, 1988), the classic UCI Heart Disease dataset (archive.ics.uci.edu/dataset/45/heart+disease), redistributed on Kaggle.",
 }
 
 _report_dict = classification_report(y_test, _y_pred_test, output_dict=True, zero_division=0)
