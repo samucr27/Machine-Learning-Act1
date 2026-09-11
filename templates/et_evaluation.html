@@ -103,7 +103,19 @@
         </div>
     </div>
 
-    <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+    <div class="mt-4">
+        <a href="{{ url_for('home') }}" 
+           style="display: inline-block; 
+                  padding: 8px 16px; 
+                  background-color: #ffffff; 
+                  color: #212529; 
+                  border: 1px solid #212529; 
+                  border-radius: 6px; 
+                  text-decoration: none; 
+                  font-size: 15px;">
+            Back to Home
+        </a>
+    </div>
 
 </div>
 {% endblock %}
