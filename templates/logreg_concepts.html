@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Logistic Regression — Concepts{% endblock %}
+
+{% block content %}
+    <h1>Logistic Regression — Concepts</h1>
+
+    <br><br>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>What is Logistic Regression?</h2>
+            <p class="lead-text mb-0">
+                Logistic Regression is a <strong>supervised classification algorithm</strong>, even though
+                its name includes the word "regression." Instead of predicting a continuous number, it
+                predicts the <strong>probability</strong> that an observation belongs to a given class. That
+                probability is then converted into a final class prediction. It is one of the most widely
+                used algorithms for problems where the outcome is a category rather than a quantity.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Why Is It a Classification Algorithm?</h3>
+            <p class="lead-text mb-0">
+                Logistic Regression takes one or more input variables and passes their weighted combination
+                through a function called the <strong>sigmoid function</strong>. This function squeezes any
+                numeric result into a value between 0 and 1, which can be interpreted as a probability. Since
+                the final output is a class label (not a numeric quantity), the algorithm is classified as a
+                classification method, not a regression method in the traditional sense.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Binary Classification</h3>
+            <p class="lead-text mb-0">
+                <strong>Binary classification</strong> refers to problems where there are only two possible
+                outcomes or classes. Logistic Regression, in its basic form, is designed for exactly this
+                type of problem. In this project, the two possible outcomes are Low Risk and High Risk of
+                heart disease. Each patient in the dataset belongs to exactly one of these two classes.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Key Concepts</h3>
+            <div class="list-group list-group-flush">
+                <div class="list-group-item d-flex align-items-start gap-3">
+                    <span class="badge rounded-pill" style="background-color:#6f4e37; min-width: 2rem;">1</span>
+                    <span class="lead-text"><strong>Independent variable:</strong> the input used to make a prediction. In this project, it is the patient's cholesterol level (mg/dL).</span>
+                </div>
+                <div class="list-group-item d-flex align-items-start gap-3">
+                    <span class="badge rounded-pill" style="background-color:#6f4e37; min-width: 2rem;">2</span>
+                    <span class="lead-text"><strong>Dependent (target) variable:</strong> the outcome being predicted. Here, it is the patient's heart disease risk.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-start gap-3">
+                    <span class="badge rounded-pill" style="background-color:#6f4e37; min-width: 2rem;">3</span>
+                    <span class="lead-text"><strong>Classes or labels:</strong> the possible categories the target variable can take. In this case, 0 (Low Risk) and 1 (High Risk).</span>
+                </div>
+                <div class="list-group-item d-flex align-items-start gap-3">
+                    <span class="badge rounded-pill" style="background-color:#6f4e37; min-width: 2rem;">4</span>
+                    <span class="lead-text"><strong>Probability of belonging to a class:</strong> the sigmoid function outputs a number between 0 and 1, representing how likely it is that the observation belongs to the "High Risk" class.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-start gap-3">
+                    <span class="badge rounded-pill" style="background-color:#6f4e37; min-width: 2rem;">5</span>
+                    <span class="lead-text"><strong>Classification threshold:</strong> the cutoff point (commonly 0.5) used to convert a probability into a final class. If the probability is above the threshold, the model predicts High Risk; otherwise, it predicts Low Risk.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Linear Regression vs. Logistic Regression</h3>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="p-3 rounded" style="background-color: #f5ebe0; border-left: 4px solid #6f4e37;">
+                        <h4 style="color:#4e342e;">Linear Regression</h4>
+                        <ul class="lead-text mb-0">
+                            <li>Predicts a continuous numeric value.</li>
+                            <li>Output can range from negative to positive infinity.</li>
+                            <li>Fits a straight line to the data.</li>
+                            <li>Used for problems like predicting price, temperature, or age.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 rounded" style="background-color: #e8dcd0; border-left: 4px solid #4e342e;">
+                        <h4 style="color:#4e342e;">Logistic Regression</h4>
+                        <ul class="lead-text mb-0">
+                            <li>Predicts the probability of belonging to a class.</li>
+                            <li>Output is always between 0 and 1.</li>
+                            <li>Fits an S-shaped sigmoid curve to the data.</li>
+                            <li>Used for problems like predicting risk, spam, or approval.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <p class="lead-text mt-3 mb-0">
+                In short, Linear Regression answers "how much?", while Logistic Regression answers "which
+                class?" — even though both algorithms share a similar underlying mathematical structure.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>A Real-World Example</h3>
+            <p class="lead-text mb-0">
+                A hospital records the cholesterol level of many patients, along with whether each patient
+                was ultimately diagnosed as low or high risk for heart disease. Logistic Regression learns
+                the relationship between cholesterol level and risk from this historical data. Once trained,
+                it can estimate the probability that a new patient, given only their cholesterol level, falls
+                into the high-risk category. This is the case implemented in the Application page.
+            </p>
+        </div>
+    </div>
+
+    <a href="{{ url_for('logreg_application') }}" class="btn btn-outline-dark">Continue to Logistic Regression - Application</a>
+
+{% endblock %}

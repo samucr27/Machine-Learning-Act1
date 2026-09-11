@@ -53,5 +53,27 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Logistic Regression</h5>
+                    <p class="card-text">Binary classification predicting heart disease risk from cholesterol level.</p>
+                    <a href="{{ url_for('logreg_concepts') }}" class="btn btn-outline-primary btn-sm">Concepts</a>
+                    <a href="{{ url_for('logreg_application') }}" class="btn btn-outline-primary btn-sm">Application</a>
+                    <a href="{{ url_for('logreg_evaluation') }}" class="btn btn-outline-primary btn-sm">Evaluation Metrics</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Extra Trees Classifier</h5>
+                    <p class="card-text">Classification model using three or more independent variables.</p>
+                    <a href="{{ url_for('et_concepts') }}" class="btn btn-outline-primary btn-sm">Concepts</a>
+                    <a href="{{ url_for('et_application') }}" class="btn btn-outline-primary btn-sm">Application</a>
+                    <a href="{{ url_for('et_evaluation') }}" class="btn btn-outline-primary btn-sm">Evaluation Metrics</a>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

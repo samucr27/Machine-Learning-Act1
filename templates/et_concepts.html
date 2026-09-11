@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Extra Trees Classifier — Concepts{% endblock %}
+
+{% block content %}
+    <h1>Extra Trees Classifier — Concepts</h1>
+
+    <br><br>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>What is the Extra Trees Classifier?</h2>
+            <p class="lead-text mb-0">
+                Extra Trees (short for <strong>Extremely Randomized Trees</strong>) is a supervised
+                classification algorithm. It builds a large "forest" of decision trees and combines their
+                votes into a final prediction. It belongs to the same family as Random Forest, but adds
+                extra randomness when building each tree. Instead of searching for the best possible split
+                at every node, it picks split points at random and keeps the best candidate. This extra
+                randomness reduces overfitting and speeds up training.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>How the Algorithm Works</h3>
+            <div class="list-group list-group-flush">
+                <div class="list-group-item d-flex align-items-start gap-3">
+                    <span class="badge rounded-pill" style="background-color:#6f4e37; min-width: 2rem;">1</span>
+                    <span class="lead-text">Many decision trees are built. Each one uses a random subset of features.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-start gap-3">
+                    <span class="badge rounded-pill" style="background-color:#6f4e37; min-width: 2rem;">2</span>
+                    <span class="lead-text">Each split point is chosen at random from a set of candidates, and the best one is kept.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-start gap-3">
+                    <span class="badge rounded-pill" style="background-color:#6f4e37; min-width: 2rem;">3</span>
+                    <span class="lead-text">Each tree classifies the new observation on its own.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-start gap-3">
+                    <span class="badge rounded-pill" style="background-color:#6f4e37; min-width: 2rem;">4</span>
+                    <span class="lead-text">The forest counts every tree's vote and returns the majority class.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>What Types of Problems Can It Solve?</h3>
+            <p class="lead-text">
+                Extra Trees handles both classification (predicting a category) and regression (predicting a
+                number). It works well with multi-class problems, many features, mixed feature types, and
+                data where a single decision tree would overfit.
+            </p>
+
+            <div class="accordion" id="accordionETUses">
+                <div class="accordion-item" style="border-left: 4px solid #6f4e37;">
+                    <h2 class="accordion-header" id="headingMedical">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseMedical"
+                                aria-expanded="false" aria-controls="collapseMedical">
+                            Medical Risk Classification
+                        </button>
+                    </h2>
+                    <div id="collapseMedical" class="accordion-collapse collapse"
+                         aria-labelledby="headingMedical" data-bs-parent="#accordionETUses">
+                        <div class="accordion-body">
+                            Classifying patients into risk categories using several clinical measurements at
+                            once. This is the case used in the Application page.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item" style="border-left: 4px solid #6f4e37;">
+                    <h2 class="accordion-header" id="headingFraud">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseFraud"
+                                aria-expanded="false" aria-controls="collapseFraud">
+                            Fraud Detection
+                        </button>
+                    </h2>
+                    <div id="collapseFraud" class="accordion-collapse collapse"
+                         aria-labelledby="headingFraud" data-bs-parent="#accordionETUses">
+                        <div class="accordion-body">
+                            Flagging suspicious transactions using several behavioral and transaction
+                            features at once.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item" style="border-left: 4px solid #6f4e37;">
+                    <h2 class="accordion-header" id="headingImage">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseImage"
+                                aria-expanded="false" aria-controls="collapseImage">
+                            Image and Sensor Classification
+                        </button>
+                    </h2>
+                    <div id="collapseImage" class="accordion-collapse collapse"
+                         aria-labelledby="headingImage" data-bs-parent="#accordionETUses">
+                        <div class="accordion-body">
+                            Sorting sensor readings or extracted image features into a fixed set of classes.
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Main Characteristics</h3>
+            <div class="list-group list-group-flush">
+                <div class="list-group-item d-flex align-items-center gap-2">
+                    <span class="badge" style="background-color:#6f4e37;">Ensemble</span>
+                    <span class="lead-text mb-0">Combines many decision trees into one model.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-center gap-2">
+                    <span class="badge" style="background-color:#6f4e37;">Randomized</span>
+                    <span class="lead-text mb-0">Chooses split thresholds at random instead of searching for the best one.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-center gap-2">
+                    <span class="badge" style="background-color:#6f4e37;">Full-Data Trees</span>
+                    <span class="lead-text mb-0">Each tree trains on the full dataset, unlike Random Forest.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-center gap-2">
+                    <span class="badge" style="background-color:#6f4e37;">Interpretable Importances</span>
+                    <span class="lead-text mb-0">Reports which features mattered most to its decisions.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-center gap-2">
+                    <span class="badge" style="background-color:#6f4e37;">Flexible Input</span>
+                    <span class="lead-text mb-0">Works with numeric and categorical features, with little preprocessing.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="p-3 rounded" style="background-color: #f5ebe0; border-left: 4px solid #6f4e37;">
+                        <h3 style="color:#4e342e;">Advantages</h3>
+                        <ul class="lead-text mb-0">
+                            <li>Reduces overfitting compared to a single decision tree.</li>
+                            <li>Trains faster than Random Forest, since splits are picked at random.</li>
+                            <li>Handles high-dimensional and mixed-scale data well.</li>
+                            <li>Reports feature importance for easier interpretation.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 rounded" style="background-color: #e8dcd0; border-left: 4px solid #4e342e;">
+                        <h3 style="color:#4e342e;">Limitations</h3>
+                        <ul class="lead-text mb-0">
+                            <li>Harder to interpret than a single decision tree.</li>
+                            <li>Needs more memory and more trees for its best performance.</li>
+                            <li>Random splits can sometimes miss the strongest possible split.</li>
+                            <li>Performance still depends on the quality of the input features.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>A Real-World Example</h3>
+            <p class="lead-text mb-0">
+                A hospital wants to flag patients at higher risk of heart disease. It has routine clinical
+                measurements: cholesterol level, age, resting blood pressure, and maximum heart rate
+                achieved during a stress test. An Extra Trees Classifier can be trained on historical patient
+                records to learn the pattern across these measurements. It then classifies a new patient as
+                Low Risk or High Risk. This is the case implemented in the Application page.
+            </p>
+        </div>
+    </div>
+
+    <a href="{{ url_for('et_application') }}" class="btn btn-outline-dark">Continue to Extra Trees Classifier - Application</a>
+
+{% endblock %}

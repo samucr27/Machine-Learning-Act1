@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Logistic Regression — Evaluation Metrics{% endblock %}
+{% block content %}
+<div class="logreg-evaluation-page evaluation-page">
+
+    <h1>Logistic Regression — Evaluation Metrics</h1>
+    <p class="lead-text mt-3">
+        The model was evaluated using the 20% testing set that was set aside during the
+        train/test split. Below are the Confusion Matrix and the classification metrics
+        that summarize how well the model predicts Heart Disease Risk from Cholesterol Level.
+    </p>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Confusion Matrix</h2>
+            <div class="row g-4 align-items-center mt-1">
+                <div class="col-md-6 text-center">
+                    <img src="data:image/png;base64,{{ confusion_plot }}"
+                         class="img-fluid rounded" alt="Logistic Regression Confusion Matrix">
+                </div>
+                <div class="col-md-6">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="cm-box text-center" style="background-color:#eaf1f7;">
+                                <div class="metric-value">{{ metrics.confusion_matrix[0][0] }}</div>
+                                <div class="metric-label">True Negatives (TN)</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="cm-box text-center" style="background-color:#fbeeee;">
+                                <div class="metric-value">{{ metrics.confusion_matrix[0][1] }}</div>
+                                <div class="metric-label">False Positives (FP)</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="cm-box text-center" style="background-color:#fbeeee;">
+                                <div class="metric-value">{{ metrics.confusion_matrix[1][0] }}</div>
+                                <div class="metric-label">False Negatives (FN)</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="cm-box text-center" style="background-color:#eaf1f7;">
+                                <div class="metric-value">{{ metrics.confusion_matrix[1][1] }}</div>
+                                <div class="metric-label">True Positives (TP)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="lead-text mt-4 mb-0">
+                Of the patients in the test set, the model correctly classified
+                {{ metrics.confusion_matrix[0][0] }} Low Risk cases (TN) and
+                {{ metrics.confusion_matrix[1][1] }} High Risk cases (TP). It incorrectly
+                labeled {{ metrics.confusion_matrix[0][1] }} Low Risk patients as High Risk (FP),
+                and missed {{ metrics.confusion_matrix[1][0] }} actual High Risk patients,
+                classifying them as Low Risk instead (FN). Because this model relies on a single
+                predictor (cholesterol level), some overlap between the two risk groups is
+                expected, which accounts for the misclassifications above.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Classification Metrics</h2>
+            <div class="row g-3 text-center mt-1">
+                <div class="col-6 col-md-3">
+                    <div class="metric-card p-3 h-100">
+                        <div class="metric-value">{{ (metrics.accuracy * 100) | round(2) }}%</div>
+                        <div class="metric-label">Accuracy</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="metric-card p-3 h-100">
+                        <div class="metric-value">{{ (metrics.precision * 100) | round(2) }}%</div>
+                        <div class="metric-label">Precision</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="metric-card p-3 h-100">
+                        <div class="metric-value">{{ (metrics.recall * 100) | round(2) }}%</div>
+                        <div class="metric-label">Recall</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="metric-card p-3 h-100">
+                        <div class="metric-value">{{ (metrics.f1_score * 100) | round(2) }}%</div>
+                        <div class="metric-label">F1-Score</div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="lead-text mt-4 mb-0">
+                With an accuracy of {{ (metrics.accuracy * 100) | round(1) }}%, the model
+                correctly classifies most patients in the test set using cholesterol level alone.
+                Precision of {{ (metrics.precision * 100) | round(1) }}% indicates how many of the
+                predicted High Risk cases were truly High Risk, while recall of
+                {{ (metrics.recall * 100) | round(1) }}% shows how many of the actual High Risk
+                cases the model was able to detect. Since a single-variable model has limited
+                information to work with, these metrics are reasonable but leave room for
+                improvement — the Extra Trees model below, which uses four variables, is
+                expected to perform better.
+            </p>
+        </div>
+    </div>
+
+    <a href="{{ url_for('logreg_application') }}" class="btn btn-outline-dark">
+        Back to Logistic Regression — Application
+    </a>
+
+</div>
+{% endblock %}

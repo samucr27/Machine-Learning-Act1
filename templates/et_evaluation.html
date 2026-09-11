@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Extra Trees Classifier — Evaluation Metrics{% endblock %}
+{% block content %}
+<div class="et-evaluation-page evaluation-page">
+
+    <h1>Extra Trees Classifier — Evaluation Metrics</h1>
+    <p class="lead-text mt-3">
+        The model was evaluated on the 20% testing set held out from the four clinical
+        variables used to train it (cholesterol, age, resting blood pressure, and maximum
+        heart rate). Below are the Confusion Matrix and the classification metrics.
+    </p>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Confusion Matrix</h2>
+            <div class="row g-4 align-items-center mt-1">
+                <div class="col-md-6 text-center">
+                    <img src="data:image/png;base64,{{ confusion_plot }}"
+                         class="img-fluid rounded" alt="Extra Trees Confusion Matrix">
+                </div>
+                <div class="col-md-6">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="cm-box text-center" style="background-color:#f5ebe0;">
+                                <div class="metric-value">{{ metrics.confusion_matrix[0][0] }}</div>
+                                <div class="metric-label">True Negatives (TN)</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="cm-box text-center" style="background-color:#fbeeee;">
+                                <div class="metric-value">{{ metrics.confusion_matrix[0][1] }}</div>
+                                <div class="metric-label">False Positives (FP)</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="cm-box text-center" style="background-color:#fbeeee;">
+                                <div class="metric-value">{{ metrics.confusion_matrix[1][0] }}</div>
+                                <div class="metric-label">False Negatives (FN)</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="cm-box text-center" style="background-color:#f5ebe0;">
+                                <div class="metric-value">{{ metrics.confusion_matrix[1][1] }}</div>
+                                <div class="metric-label">True Positives (TP)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="lead-text mt-4 mb-0">
+                The model correctly identified {{ metrics.confusion_matrix[0][0] }} Low Risk
+                patients (TN) and {{ metrics.confusion_matrix[1][1] }} High Risk patients (TP).
+                It produced {{ metrics.confusion_matrix[0][1] }} false alarms, labeling Low Risk
+                patients as High Risk (FP), and missed {{ metrics.confusion_matrix[1][0] }} actual
+                High Risk patients, classifying them as Low Risk (FN). By combining four clinical
+                variables instead of one, the ensemble of trees captures more of the interaction
+                between age, blood pressure, heart rate, and cholesterol, which is reflected in
+                these results.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Classification Metrics</h2>
+            <div class="row g-3 text-center mt-1">
+                <div class="col-6 col-md-3">
+                    <div class="metric-card p-3 h-100">
+                        <div class="metric-value">{{ (metrics.accuracy * 100) | round(2) }}%</div>
+                        <div class="metric-label">Accuracy</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="metric-card p-3 h-100">
+                        <div class="metric-value">{{ (metrics.precision * 100) | round(2) }}%</div>
+                        <div class="metric-label">Precision</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="metric-card p-3 h-100">
+                        <div class="metric-value">{{ (metrics.recall * 100) | round(2) }}%</div>
+                        <div class="metric-label">Recall</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="metric-card p-3 h-100">
+                        <div class="metric-value">{{ (metrics.f1_score * 100) | round(2) }}%</div>
+                        <div class="metric-label">F1-Score</div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="lead-text mt-4 mb-0">
+                The Extra Trees Classifier reaches {{ (metrics.accuracy * 100) | round(1) }}%
+                accuracy on the test set, with a precision of
+                {{ (metrics.precision * 100) | round(1) }}% and a recall of
+                {{ (metrics.recall * 100) | round(1) }}%. Using an ensemble of decision trees
+                over four clinical variables lets the model capture non-linear relationships that
+                a single-variable Logistic Regression cannot, which generally translates into a
+                stronger and more balanced performance across both classes.
+            </p>
+        </div>
+    </div>
+
+    <a href="{{ url_for('et_application') }}" class="btn btn-outline-dark">
+        Back to Extra Trees Classifier — Application
+    </a>
+
+</div>
+{% endblock %}
