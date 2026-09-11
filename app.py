@@ -110,7 +110,7 @@ def logreg_application():
     error = None
 
     if request.method == "POST":
-        raw_value = request.form.get("cholesterol", "").strip()
+        raw_value = request.form.get("chol", "").strip()
         submitted_value = raw_value
 
         if raw_value == "":
