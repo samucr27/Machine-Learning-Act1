@@ -7,7 +7,6 @@
 
     <br><br>
 
-    
     <div class="card accent-card mb-4">
         <div class="card-body p-4">
             <h2>Problem Context</h2>
@@ -26,25 +25,23 @@
         </div>
     </div>
 
-    
     <div class="card accent-card mb-4">
         <div class="card-body p-4">
             <h2>Variables</h2>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <strong>Independent Variable (X):</strong> Daily Temperature 
-                    <br></br>How hot or cold the day was on average, 
+                    <br>How hot or cold the day was on average, 
                     in degrees Celsius (°C). This is the input the model uses to make its prediction.
                 </li>
                 <li class="list-group-item">
                     <strong>Dependent Variable (Y):</strong> Electricity Consumption 
-                    <br></br>How much electricity was used that day, in kilowatt-hours (kWh/day). 
+                    <br>How much electricity was used that day, in kilowatt-hours (kWh/day). 
                     This is the value the model tries to predict.
                 </li>
             </ul>
         </div>
     </div>
-
 
     <div class="card accent-card mb-4">
         <div class="card-body p-4">
@@ -57,7 +54,6 @@
             </ul>
         </div>
     </div>
- 
 
     <div class="card accent-card mb-4">
         <div class="card-body p-4">
@@ -71,8 +67,7 @@
                  style="display: block; margin: 0 auto; width: 100%; max-width: 700px;">
         </div>
     </div>
- 
- 
+
     <div class="card accent-card mb-4">
         <div class="card-body p-4">
             <h2>Linear Regression Model</h2>
@@ -89,8 +84,7 @@
             </p>
         </div>
     </div>
- 
-    
+
     <div class="card accent-card mb-4">
         <div class="card-body p-4">
             <h2>Try a Prediction</h2>
@@ -98,7 +92,7 @@
                 Enter an expected daily temperature (°C) to see the electricity consumption predicted by
                 the trained model.
             </p>
- 
+
             <form method="POST" action="{{ url_for('lr_application') }}" class="row g-3 align-items-end" novalidate>
                 <div class="col-sm-8">
                     <label for="temperature" class="form-label">Daily Temperature (°C)</label>
@@ -120,7 +114,7 @@
                     <button type="submit" class="btn btn-primary w-100">Predict Consumption</button>
                 </div>
             </form>
- 
+
             {% if prediction is not none %}
                 <div class="alert alert-success mt-4 mb-0">
                     Estimated consumption for a day at <strong>{{ submitted_value }}°C</strong>:
@@ -130,7 +124,9 @@
         </div>
     </div>
 
-        <a href="{{ url_for('home') }}" class="btn btn-outline-dark">Back to Home</a>
+    <!-- Navigation Button -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <a href="{{ url_for('logreg_concepts') }}" class="btn btn-outline-dark">Next: Logistic Regression Concepts</a>
+    </div>
 
- 
 {% endblock %}
