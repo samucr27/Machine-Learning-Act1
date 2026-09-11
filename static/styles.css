@@ -91,3 +91,47 @@ body {
 .types-page .accent-card p {
     max-width: none;
 }
+
+/* --- Evaluation pages (Logistic Regression & Extra Trees) --- */
+.evaluation-page .accent-card {
+    border-left: 3px solid var(--accent);
+}
+.evaluation-page h2 {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+.evaluation-page .lead-text {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    max-width: 68ch;
+}
+.evaluation-page .accent-card .lead-text {
+    max-width: none;
+}
+.evaluation-page .metric-card {
+    border-top: 4px solid var(--accent);
+    border-radius: 0.5rem;
+    background-color: #fff;
+}
+.evaluation-page .metric-value {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+.evaluation-page .metric-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+}
+.evaluation-page .cm-box {
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+.logreg-evaluation-page {
+    --accent: #2c5f8a;
+}
+.et-evaluation-page {
+    --accent: #6f4e37;
+}
