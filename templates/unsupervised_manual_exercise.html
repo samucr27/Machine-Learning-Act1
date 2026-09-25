@@ -1,10 +1,244 @@
 {% extends "base.html" %}
-{% block title %}K-Means — Manual Exercise{% endblock %}
-{% block content %}
-    <h1>K-Means — Manual Exercise</h1>
-    <p class="text-muted">Content pending — owned by Sergio.</p>
 
-    {# Data already available from app.py, for reference while building this page:
-       initial_centroids, initial_plot, iterations (list of 3, each with
-       table/old_centroids/new_centroids/variance/total_variance/plot), summary #}
+{% block title %}K-Means — Manual Exercise{% endblock %}
+
+{% block content %}
+<style>
+    .manual-page { --accent: #2f5d50; }
+    .manual-page .accent-card { border-left: 3px solid var(--accent); }
+    .manual-page h2 { color: var(--accent); font-weight: 600; font-size: 1.5rem; }
+    .manual-page h3 { font-weight: 600; font-size: 1.15rem; margin-top: 1.25rem; }
+    .manual-page .lead-text { font-size: 1.05rem; line-height: 1.75; }
+    .manual-page .scroll-table { max-height: 380px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 0.375rem; }
+    .manual-page .scroll-table thead th { position: sticky; top: 0; background-color: #f1f5f3; z-index: 1; }
+    .manual-page .table td, .manual-page .table th { font-size: 0.9rem; white-space: nowrap; }
+    .manual-page .nearest { font-weight: 700; color: var(--accent); }
+    .manual-page .iteration-badge {
+        display: inline-block; background-color: var(--accent); color: #fff;
+        padding: 0.2rem 0.75rem; border-radius: 999px; font-size: 0.85rem; margin-bottom: 0.5rem;
+    }
+    .manual-page .formula {
+        background-color: #f1f5f3; border-radius: 0.375rem; padding: 0.75rem 1rem;
+        font-family: monospace; text-align: center; margin: 0.75rem 0;
+    }
+    .manual-page .plot-img { display: block; margin: 0 auto; width: 100%; max-width: 680px; }
+</style>
+
+<div class="manual-page">
+
+    <h1>K-Means — Manual Exercise</h1>
+    <p class="lead-text mt-3">
+        This page walks through the K-Means algorithm step by step on a small sample, before
+        applying it to the full dataset in the Clustering Application. Every distance,
+        assignment, and centroid shown below is calculated by the application from the sample
+        CSV file; nothing is hard-coded.
+    </p>
+
+    <br>
+
+    <!-- ===================== 1. DATASET ===================== -->
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>1. Dataset and Context</h2>
+            <p class="lead-text">
+                The sample contains <strong>{{ iterations[0].table | length }} mall customers</strong>,
+                taken from the same customer segmentation dataset used in the Clustering Application
+                (<code>store_customers_100_sample.csv</code>). The goal is to discover natural
+                groups of shoppers based on how much they earn and how much they spend, without
+                any predefined labels.
+            </p>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle mb-0">
+                    <thead class="table-light">
+                        <tr><th>Variable</th><th>Axis</th><th>Meaning</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Annual Income (k$)</strong></td>
+                            <td>X</td>
+                            <td style="white-space: normal;">The customer's yearly income, in thousands of US dollars. It represents purchasing power.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Spending Score (1-100)</strong></td>
+                            <td>Y</td>
+                            <td style="white-space: normal;">A score assigned by the mall from 1 to 100 based on the customer's buying behavior. Higher means the customer spends more.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== 2. INITIAL CENTROIDS ===================== -->
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>2. Initial Centroids</h2>
+            <p class="lead-text">
+                K-Means needs a starting point for each cluster. With <strong>K = 3</strong>, three
+                real customers of the sample were selected as initial centroids, spread along the
+                income axis so that each one starts in a different region of the data.
+            </p>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle text-center mb-0">
+                    <thead class="table-light">
+                        <tr><th>Centroid</th><th>Selection rule</th><th>Customer ID</th><th>Annual Income (k$)</th><th>Spending Score</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for c in summary.initial_centroid_info %}
+                        <tr>
+                            <td><strong>{{ c.centroid }}</strong></td>
+                            <td style="white-space: normal;">{{ c.rule }}</td>
+                            <td>{{ c.customer_id }}</td>
+                            <td>{{ "%.2f" | format(c.x) }}</td>
+                            <td>{{ "%.2f" | format(c.y) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== 3. INITIAL PLOT ===================== -->
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>3. Initial Scatter Plot</h2>
+            <p class="lead-text">
+                Before any iteration, all customers are unassigned (gray points). The black X markers
+                show the positions of the three initial centroids.
+            </p>
+            <img src="data:image/png;base64,{{ initial_plot }}" class="plot-img rounded"
+                 alt="Scatter plot of the 100 customers with the three initial centroids">
+        </div>
+    </div>
+
+    <!-- ===================== 4. ITERATIONS ===================== -->
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>4. Iterations of the Algorithm</h2>
+            <p class="lead-text">
+                Each iteration repeats the same three steps: (1) calculate the Euclidean distance from
+                every customer to each centroid, (2) assign each customer to the cluster of its nearest
+                centroid, and (3) recalculate each centroid as the average of the customers assigned to it.
+            </p>
+            <div class="formula">
+                d(p, c) = &radic;[ (x<sub>p</sub> &minus; x<sub>c</sub>)&sup2; + (y<sub>p</sub> &minus; y<sub>c</sub>)&sup2; ]
+            </div>
+            <div class="formula">
+                new centroid = ( average X of the cluster , average Y of the cluster )
+            </div>
+            <p class="lead-text mb-0">
+                In the plots, the white X markers are the previous centroids and the arrows show where each
+                centroid moved. In the distance tables, the <span class="nearest">highlighted value</span> is the
+                smallest distance, which decides the cluster the customer is assigned to.
+            </p>
+        </div>
+    </div>
+
+    {% for it in iterations %}
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <span class="iteration-badge">Iteration {{ it.number }}</span>
+            <h2>Iteration {{ it.number }}</h2>
+
+            <h3>Centroids used in this iteration</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle text-center">
+                    <thead class="table-light">
+                        <tr><th>Centroid</th><th>Annual Income (k$)</th><th>Spending Score</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for c in it.old_centroids %}
+                        <tr>
+                            <td><strong>C{{ loop.index }}</strong></td>
+                            <td>{{ "%.2f" | format(c[0]) }}</td>
+                            <td>{{ "%.2f" | format(c[1]) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Distances and cluster assignments</h3>
+            <div class="scroll-table mb-3">
+                <table class="table table-sm table-hover align-middle text-center mb-0">
+                    <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Income (X)</th>
+                            <th>Spending (Y)</th>
+                            <th>Distance to C1</th>
+                            <th>Distance to C2</th>
+                            <th>Distance to C3</th>
+                            <th>Assigned Cluster</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in it.table %}
+                        <tr>
+                            <td>{{ row.customer_id }}</td>
+                            <td>{{ row.x }}</td>
+                            <td>{{ row.y }}</td>
+                            <td class="{{ 'nearest' if row.cluster == 1 }}">{{ row.dist_c1 }}</td>
+                            <td class="{{ 'nearest' if row.cluster == 2 }}">{{ row.dist_c2 }}</td>
+                            <td class="{{ 'nearest' if row.cluster == 3 }}">{{ row.dist_c3 }}</td>
+                            <td><strong>Cluster {{ row.cluster }}</strong></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Updated centroids</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Cluster</th>
+                            <th>Customers assigned</th>
+                            <th>Previous centroid</th>
+                            <th>New centroid</th>
+                            <th>Centroid movement</th>
+                            <th>Within-cluster variance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for new_c in it.new_centroids %}
+                        {% set k = loop.index %}
+                        {% set old_c = it.old_centroids[loop.index0] %}
+                        <tr>
+                            <td><strong>Cluster {{ k }}</strong></td>
+                            <td>{{ it.cluster_sizes[loop.index0] }}</td>
+                            <td>({{ "%.2f" | format(old_c[0]) }}, {{ "%.2f" | format(old_c[1]) }})</td>
+                            <td>({{ "%.2f" | format(new_c[0]) }}, {{ "%.2f" | format(new_c[1]) }})</td>
+                            <td>{{ it.centroid_shift[loop.index0] }}</td>
+                            <td>{{ it.variance["cluster_" ~ k] }}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr class="table-light">
+                            <td colspan="5" class="text-end"><strong>Total within-cluster variance</strong></td>
+                            <td><strong>{{ it.total_variance }}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="lead-text">
+                {% if it.reassigned is none %}
+                    This is the first assignment, so every customer receives a cluster for the first time.
+                {% else %}
+                    Compared with the previous iteration, <strong>{{ it.reassigned }}</strong> customers changed cluster.
+                {% endif %}
+                The "Centroid movement" column is the Euclidean distance each centroid moved after being recalculated.
+            </p>
+
+            <h3>Scatter plot after iteration {{ it.number }}</h3>
+            <img src="data:image/png;base64,{{ it.plot }}" class="plot-img rounded mt-2"
+                 alt="Scatter plot of the customers colored by cluster after iteration {{ it.number }}, with the updated centroids">
+        </div>
+    </div>
+    {% endfor %}
+
+
+</div>
 {% endblock %}
