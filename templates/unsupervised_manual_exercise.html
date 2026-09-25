@@ -239,6 +239,138 @@
     </div>
     {% endfor %}
 
+        <!-- ===================== 5. VARIANCE COMPARISON ===================== -->
+    {% set v = summary.variance_by_iteration %}
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>5. Variance Comparison Across Iterations</h2>
+            <p class="lead-text">
+                The within-cluster variance of each cluster is the average squared distance between
+                its customers and its centroid. The total is the sum over the three clusters. A lower
+                value means the customers inside each cluster are closer to each other, so the
+                clusters are more compact.
+            </p>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Iteration</th>
+                            <th>Cluster 1</th>
+                            <th>Cluster 2</th>
+                            <th>Cluster 3</th>
+                            <th>Total variance</th>
+                            <th>Change vs. previous</th>
+                            <th>Customers reassigned</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for it in iterations %}
+                        <tr>
+                            <td><strong>{{ it.number }}</strong></td>
+                            <td>{{ it.variance.cluster_1 }}</td>
+                            <td>{{ it.variance.cluster_2 }}</td>
+                            <td>{{ it.variance.cluster_3 }}</td>
+                            <td><strong>{{ it.total_variance }}</strong></td>
+                            <td>
+                                {% if loop.first %}
+                                    —
+                                {% else %}
+                                    {% set prev = iterations[loop.index0 - 1].total_variance %}
+                                    {{ "%.2f" | format(it.total_variance - prev) }}
+                                    ({{ "%.1f" | format((it.total_variance - prev) / prev * 100) }}%)
+                                {% endif %}
+                            </td>
+                            <td>{{ "—" if it.reassigned is none else it.reassigned }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p class="lead-text mb-0">
+                The total variance went from <strong>{{ v[0] }}</strong> in iteration 1 to
+                <strong>{{ v[1] }}</strong> in iteration 2 and <strong>{{ v[2] }}</strong> in iteration 3,
+                an overall reduction of <strong>{{ "%.1f" | format((v[0] - v[2]) / v[0] * 100) }}%</strong>.
+                The drop is large in the first step and smaller in the second, which is the expected
+                behavior of K-Means: the first reassignment fixes most of the poorly placed initial
+                centroids, and later iterations only make fine adjustments as the algorithm moves
+                toward convergence. The number of customers that change cluster also falls from
+                {{ iterations[1].reassigned }} to {{ iterations[2].reassigned }}, confirming that the
+                clusters are stabilizing.
+            </p>
+        </div>
+    </div>
+
+    <!-- ===================== 6. FINAL RESULT ===================== -->
+    {% set profiles = {
+        1: ["Low income, moderate-high spending", "Customers with limited income who still spend a relatively large share of it. They respond well to discounts, promotions, and loyalty programs."],
+        2: ["Middle income, average spending", "The largest and most balanced group. Their income and spending are both close to the average, so they are a good target for general campaigns."],
+        3: ["High income, low spending", "Customers with high purchasing power who spend little at the mall. They are the biggest opportunity: premium products or personalized offers could raise their spending."]
+    } %}
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>6. Final Result and Cluster Characteristics</h2>
+            <p class="lead-text">
+                In iteration 3 the centroids moved only
+                {{ iterations[2].centroid_shift | join(", ") }} units, and only
+                {{ iterations[2].reassigned }} customers changed cluster, so the clusters are practically
+                stable. The final groups are:
+            </p>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Cluster</th>
+                            <th>Customers</th>
+                            <th>Avg. Annual Income (k$)</th>
+                            <th>Avg. Spending Score</th>
+                            <th>Income range</th>
+                            <th>Spending range</th>
+                            <th>Final centroid</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in summary.cluster_stats %}
+                        {% set fc = summary.final_centroids[loop.index0] %}
+                        <tr>
+                            <td><strong>Cluster {{ s.cluster }}</strong></td>
+                            <td>{{ s.count }}</td>
+                            <td>{{ s.avg_income }}</td>
+                            <td>{{ s.avg_spending }}</td>
+                            <td>{{ s.min_income }} – {{ s.max_income }}</td>
+                            <td>{{ s.min_spending }} – {{ s.max_spending }}</td>
+                            <td>({{ "%.2f" | format(fc[0]) }}, {{ "%.2f" | format(fc[1]) }})</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row g-3 mt-1">
+                {% for s in summary.cluster_stats %}
+                <div class="col-md-4">
+                    <div class="card h-100" style="border-top: 4px solid var(--accent);">
+                        <div class="card-body">
+                            <h3 class="mt-0">Cluster {{ s.cluster }}</h3>
+                            <p class="mb-1"><strong>{{ profiles[s.cluster][0] }}</strong></p>
+                            <p class="text-muted small mb-2">
+                                {{ s.count }} customers &middot; income {{ s.avg_income }}k$ &middot; score {{ s.avg_spending }}
+                            </p>
+                            <p class="mb-0">{{ profiles[s.cluster][1] }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <p class="lead-text mt-4 mb-0">
+                The manual exercise shows how K-Means works internally: it starts from three chosen
+                customers as centroids, and in each iteration the customers are reassigned and the centroids move
+                toward the center of their groups, reducing the within-cluster variance. The same
+                procedure, run automatically with scikit-learn on the full dataset, is shown in the
+                <a href="{{ url_for('unsupervised_clustering_application') }}">Clustering Application</a>.
+            </p>
+        </div>
+    </div>
 
 </div>
 {% endblock %}
