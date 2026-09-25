@@ -19,6 +19,18 @@ from ExtraTrees_model import (
     predict_class as et_predict,
     EVAL_METRICS as ET_METRICS,
 )
+from ManualKMeans_model import (
+    INITIAL_CENTROIDS as MANUAL_INITIAL_CENTROIDS,
+    INITIAL_PLOT as MANUAL_INITIAL_PLOT,
+    ITERATIONS as MANUAL_ITERATIONS,
+    FINAL_SUMMARY as MANUAL_FINAL_SUMMARY,
+)
+from KMeans_model import (
+    DATASET_INFO as KMEANS_INFO,
+    CLUSTER_SUMMARY as KMEANS_CLUSTER_SUMMARY,
+    RECORDS_TABLE as KMEANS_RECORDS_TABLE,
+    get_plot_base64 as kmeans_plot,
+)
 
 app = Flask(__name__)
 
@@ -186,6 +198,34 @@ def et_evaluation():
         "et_evaluation.html",
         metrics=ET_METRICS,
         confusion_plot=et_cm_plot(),
+    )
+
+
+# ---------- Unsupervised: K-Means (Activity 3) ----------
+@app.route("/unsupervised/concepts")
+def unsupervised_concepts():
+    return render_template("unsupervised_concepts.html")
+
+
+@app.route("/unsupervised/manual-exercise")
+def unsupervised_manual_exercise():
+    return render_template(
+        "unsupervised_manual_exercise.html",
+        initial_centroids=MANUAL_INITIAL_CENTROIDS.tolist(),
+        initial_plot=MANUAL_INITIAL_PLOT,
+        iterations=MANUAL_ITERATIONS,
+        summary=MANUAL_FINAL_SUMMARY,
+    )
+
+
+@app.route("/unsupervised/clustering-application")
+def unsupervised_clustering_application():
+    return render_template(
+        "unsupervised_clustering_application.html",
+        dataset_info=KMEANS_INFO,
+        cluster_summary=KMEANS_CLUSTER_SUMMARY,
+        records=KMEANS_RECORDS_TABLE,
+        plot_url=kmeans_plot(),
     )
 
 

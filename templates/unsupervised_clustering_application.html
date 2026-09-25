@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}K-Means Clustering — Application{% endblock %}
+
+{% block content %}
+    <h1>K-Means Clustering — Application</h1>
+
+    <br><br>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Problem Context</h2>
+            <p class="lead-text mb-0">
+                Shopping malls want to understand their customers beyond a single average
+                profile, so they can design marketing strategies that actually match how
+                different groups of shoppers behave. The phenomenon analyzed here is
+                <strong>customer segmentation</strong>. Each row in the dataset represents
+                one mall customer, described by their annual income and their spending
+                score. Unlike the classification models used elsewhere in this project,
+                clustering does not rely on a labeled target variable. Instead, the
+                algorithm discovers natural groupings in the data on its own, based purely
+                on how similar customers are to one another. The value the model attempts
+                to discover is the group, or cluster, each customer naturally belongs to.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Dataset and Variable Selection</h2>
+            <p class="lead-text">
+                The dataset used is <code>store_customers.csv</code>, containing
+                {{ dataset_info.n_records_raw }} raw customer records with the columns
+                CustomerID, Gender, Age, Annual Income (k$), and Spending Score (1-100).
+            </p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Records used after cleaning:</strong> {{ dataset_info.n_records }}</li>
+                <li class="list-group-item">
+                    <strong>Variables used for clustering:</strong>
+                    <ul class="mb-0">
+                        {% for var in dataset_info.independent_variables %}
+                        <li>{{ var }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="list-group-item"><strong>Source:</strong> {{ dataset_info.source }}</li>
+            </ul>
+            <p class="lead-text mt-3 mb-0">
+                Annual Income and Spending Score were chosen because together they capture
+                both a customer's purchasing power and their actual buying behavior. Income
+                alone only shows what a customer could spend, while Spending Score alone
+                only shows how much they do spend, without context. Combining both variables
+                reveals meaningful patterns, such as customers with high income but low
+                spending, or customers with modest income but high spending, that a single
+                variable could never expose on its own.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Data Preprocessing</h2>
+            <p class="lead-text mb-0">
+                Before training, the raw dataset was checked for missing values.
+                {{ dataset_info.n_dropped }} records containing null values were removed,
+                leaving {{ dataset_info.n_records }} clean records for clustering. Because
+                Annual Income and Spending Score are measured on very different scales
+                (income in thousands of dollars, spending score from 1 to 100), both
+                variables were standardized using scikit-learn's <code>StandardScaler</code>
+                before training. This step is essential for K-Means, since the algorithm
+                groups points based on distance, and a variable with a larger numeric range
+                would otherwise dominate the distance calculation and distort the clusters.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>K-Means Model Configuration</h2>
+            <p class="lead-text">
+                A <code>KMeans</code> model from scikit-learn was trained on the scaled
+                Annual Income and Spending Score values, following this pipeline:
+            </p>
+            <p class="lead-text mb-0 text-center">
+                <code>CSV Dataset &rarr; Pandas &rarr; Drop Nulls &rarr; Feature Scaling &rarr; K-Means Training &rarr; Cluster Assignment &rarr; Evaluation &rarr; Visualization</code>
+            </p>
+            <p class="lead-text mt-3 mb-0">
+                The model was configured with <strong>K = {{ dataset_info.n_clusters }}
+                clusters</strong>. This number was chosen because it produces well-separated,
+                evenly sized groups that map cleanly onto distinct customer profiles
+                (for example, high income with low spending, or low income with high
+                spending), rather than splitting the data into groups too small to act on or
+                merging genuinely different customer types into one.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Clustering Visualization</h2>
+            <p class="lead-text">
+                The chart below plots every customer by Annual Income and Spending Score,
+                colored by the cluster K-Means assigned them to. The marked points show each
+                cluster's centroid, the average position of all customers within that group.
+            </p>
+            <img src="data:image/png;base64,{{ plot_url }}"
+                 alt="Scatter plot of customers by annual income and spending score, colored by cluster, with centroids marked"
+                 style="display: block; margin: 0 auto; width: 100%; max-width: 700px;">
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Cluster Summary</h2>
+            <p class="lead-text">
+                Each cluster's size and centroid coordinates, in their original (unscaled)
+                units, are shown below.
+            </p>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Cluster</th>
+                            <th>Number of Customers</th>
+                            <th>Centroid — Annual Income (k$)</th>
+                            <th>Centroid — Spending Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cluster in cluster_summary %}
+                        <tr>
+                            <td><span class="badge rounded-pill" style="background-color:#6f4e37;">{{ cluster.cluster }}</span></td>
+                            <td>{{ cluster.count }}</td>
+                            <td>{{ cluster.centroid_income | round(2) }}</td>
+                            <td>{{ cluster.centroid_spending | round(2) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Cluster Interpretation</h2>
+            <p class="lead-text mb-0">
+                Reading the centroids above against the scatter plot reveals distinct
+                customer profiles. Clusters with high income and high spending score
+                represent premium customers who both can and do spend heavily — strong
+                candidates for loyalty programs and exclusive offers. Clusters with high
+                income but low spending score represent cautious, high-earning shoppers who
+                are not currently engaging with the mall — good targets for personalized
+                promotions designed to convert their spending potential into actual
+                purchases. Clusters with low income but high spending score represent
+                budget-conscious customers who are already highly engaged, making them
+                receptive to value-driven, frequent promotions. Clusters near average income
+                and average spending score represent typical, stable shoppers who respond
+                well to general, mall-wide marketing rather than targeted campaigns.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Model Evaluation — Silhouette Score</h2>
+            <p class="lead-text mb-0">
+                The clustering was evaluated using the <strong>silhouette score</strong>,
+                which measures how well each customer fits within its assigned cluster
+                compared to the next closest cluster. The score ranges from -1 to 1: values
+                close to 1 indicate dense, well-separated clusters, values near 0 indicate
+                overlapping clusters, and negative values indicate customers that may have
+                been assigned to the wrong cluster. The model achieved a silhouette score of
+                <strong>{{ dataset_info.silhouette_score | round(4) }}</strong>, which
+                indicates
+                {% if dataset_info.silhouette_score >= 0.5 %}
+                    strong, well-separated clustering, meaning customers within each group
+                    are clearly more similar to one another than to customers in other
+                    groups. This gives confidence that the cluster profiles described above
+                    reflect real, distinct customer segments.
+                {% elif dataset_info.silhouette_score >= 0.25 %}
+                    a reasonable, moderate degree of separation between clusters. Some
+                    overlap likely exists near the cluster boundaries, but the overall
+                    grouping is still meaningful enough to support the customer profiles
+                    described above.
+                {% else %}
+                    weak separation between clusters, suggesting significant overlap. The
+                    general groupings can still offer some useful signal, but the
+                    boundaries between customer segments should be interpreted with
+                    caution.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>Customer Records and Assigned Clusters</h2>
+            <p class="lead-text">
+                Every customer record below was processed through the trained K-Means model
+                and assigned to its corresponding cluster. No cluster assignments shown here
+                are hard-coded.
+            </p>
+            <div class="table-responsive" style="max-height: 420px; overflow-y: auto;">
+                <table class="table table-hover align-middle table-sm">
+                    <thead style="position: sticky; top: 0; background-color: #fff;">
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Annual Income (k$)</th>
+                            <th>Spending Score (1-100)</th>
+                            <th>Cluster</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                        <tr>
+                            <td>{{ record.CustomerID }}</td>
+                            <td>{{ record["Annual Income (k$)"] }}</td>
+                            <td>{{ record["Spending Score (1-100)"] }}</td>
+                            <td><span class="badge rounded-pill" style="background-color:#6f4e37;">{{ record.Cluster }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <a href="{{ url_for('home') }}" class="btn btn-outline-dark">Back to Home</a>
+    </div>
+
+{% endblock %}

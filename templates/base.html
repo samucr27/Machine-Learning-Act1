@@ -63,6 +63,17 @@
                             <li><a class="dropdown-item" href="{{ url_for('et_evaluation') }}">Evaluation Metrics</a></li>
                         </ul>
                     </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Unsupervised
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ url_for('unsupervised_concepts') }}">Concepts</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('unsupervised_manual_exercise') }}">Manual Exercise</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('unsupervised_clustering_application') }}">Clustering Application</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
