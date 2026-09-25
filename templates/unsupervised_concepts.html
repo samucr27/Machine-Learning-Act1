@@ -1,6 +1,153 @@
 {% extends "base.html" %}
-{% block title %}Unsupervised Learning — Concepts{% endblock %}
+
+{% block title %}Unsupervised Machine Learning — Concepts{% endblock %}
+
 {% block content %}
-    <h1>Unsupervised Learning — Concepts</h1>
-    <p class="text-muted">Content pending — owned by Jonathan.</p>
+    <h1>Unsupervised Machine Learning — Concepts</h1>
+
+    <br><br>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2>What is Unsupervised Learning?</h2>
+            <p class="lead-text mb-0">
+                Unsupervised learning trains a model on data that has no labels. The algorithm never sees a
+                "correct answer" during training, unlike supervised learning (used in Linear Regression, Logistic
+                Regression, and Extra Trees). Instead, it looks for structure in the data on its own: groups of
+                similar records, patterns, or hidden relationships. It is useful when the goal is to explore data
+                and discover structure, not to predict a known outcome.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>What is Clustering?</h3>
+            <p class="lead-text">
+                Clustering is the most common unsupervised task. It groups records into clusters, so that
+                records in the same cluster are similar to each other, and records in different clusters are
+                different. No cluster labels exist beforehand. The algorithm creates them from the data itself.
+            </p>
+
+            <div class="accordion" id="accordionClusteringUses">
+                <div class="accordion-item" style="border-left: 4px solid #6f4e37;">
+                    <h2 class="accordion-header" id="headingSegmentation">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseSegmentation"
+                                aria-expanded="false" aria-controls="collapseSegmentation">
+                            Customer Segmentation
+                        </button>
+                    </h2>
+                    <div id="collapseSegmentation" class="accordion-collapse collapse"
+                         aria-labelledby="headingSegmentation" data-bs-parent="#accordionClusteringUses">
+                        <div class="accordion-body">
+                            Grouping customers by purchase behavior or spending patterns, without knowing the
+                            groups in advance.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item" style="border-left: 4px solid #6f4e37;">
+                    <h2 class="accordion-header" id="headingDocuments">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseDocuments"
+                                aria-expanded="false" aria-controls="collapseDocuments">
+                            Document and Text Grouping
+                        </button>
+                    </h2>
+                    <div id="collapseDocuments" class="accordion-collapse collapse"
+                         aria-labelledby="headingDocuments" data-bs-parent="#accordionClusteringUses">
+                        <div class="accordion-body">
+                            Organizing articles or messages into topics based on their content, with no
+                            predefined topic list.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item" style="border-left: 4px solid #6f4e37;">
+                    <h2 class="accordion-header" id="headingAnomaly">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseAnomaly"
+                                aria-expanded="false" aria-controls="collapseAnomaly">
+                            Anomaly Detection
+                        </button>
+                    </h2>
+                    <div id="collapseAnomaly" class="accordion-collapse collapse"
+                         aria-labelledby="headingAnomaly" data-bs-parent="#accordionClusteringUses">
+                        <div class="accordion-body">
+                            Finding records that do not fit well into any cluster, which often signals an
+                            unusual or suspicious case.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>How K-Means Works</h3>
+            <p class="lead-text">
+                K-Means is the most widely used clustering algorithm. It splits the data into K clusters, where K
+                is chosen before running the algorithm. It works through a repeated cycle of assignment and
+                update:
+            </p>
+
+            <div class="list-group list-group-flush mb-3">
+                <div class="list-group-item d-flex align-items-start gap-3">
+                    <span class="badge rounded-pill" style="background-color:#6f4e37; min-width: 2rem;">1</span>
+                    <span class="lead-text">Choose K, the number of clusters, and place K initial centroids. A centroid is a point that represents the center of a cluster.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-start gap-3">
+                    <span class="badge rounded-pill" style="background-color:#6f4e37; min-width: 2rem;">2</span>
+                    <span class="lead-text">Calculate the distance from each record to every centroid (usually Euclidean distance), and assign each record to its nearest centroid.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-start gap-3">
+                    <span class="badge rounded-pill" style="background-color:#6f4e37; min-width: 2rem;">3</span>
+                    <span class="lead-text">Recalculate each centroid as the average position of all records now assigned to it.</span>
+                </div>
+                <div class="list-group-item d-flex align-items-start gap-3">
+                    <span class="badge rounded-pill" style="background-color:#6f4e37; min-width: 2rem;">4</span>
+                    <span class="lead-text">Repeat steps 2 and 3. Stop once the centroids no longer move, or after a fixed number of iterations.</span>
+                </div>
+                <div >
+                    </div>
+            </div>
+
+                    <img src="{{ url_for('static', filename='kmeans.png') }}"
+                 alt="K-Means iterations showing points reassigned to clusters and centroids moving toward the cluster centers"
+                 style="display: block; margin: 0 auto; width: 80%;">
+            <p class="lead-text mt-3 mb-0 text-center text-muted">
+                <em>Example: records reassigned to the nearest centroid, and centroids updated across iterations.</em>
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">        <div class="card-body p-4">
+            <h3>The Role of Centroids</h3>
+            <p class="lead-text mb-0">
+                A centroid is the center point of a cluster. It is not necessarily one of the actual data points.
+                It is calculated as the average of every record assigned to that cluster. Centroids drive the
+                whole algorithm: every record is grouped based on which centroid it is closest to, and every
+                centroid is repositioned based on which records belong to it. When the centroids stabilize, the
+                clusters are considered final.
+            </p>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h3>Why Iterations Matter</h3>
+            <p class="lead-text mb-0">
+                The first centroids are usually placed randomly or manually, so the first assignment of records
+                to clusters is rarely the best one. Each iteration corrects this: records move to a better fitting
+                cluster, and centroids shift toward the true center of their group. Comparing the variance within
+                each cluster across iterations shows this improvement directly. Variance should decrease as the
+                clusters become tighter and more accurate.
+            </p>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <a href="{{ url_for('unsupervised_manual_exercise') }}" class="btn btn-outline-dark">Continue to Manual Exercise</a>
+    </div>
+
 {% endblock %}
