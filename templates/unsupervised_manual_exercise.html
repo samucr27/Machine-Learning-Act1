@@ -239,7 +239,7 @@
     </div>
     {% endfor %}
 
-        <!-- ===================== 5. VARIANCE COMPARISON ===================== -->
+    <!-- ===================== 5. VARIANCE COMPARISON ===================== -->
     {% set v = summary.variance_by_iteration %}
     <div class="card accent-card mb-4">
         <div class="card-body p-4">
@@ -370,6 +370,10 @@
                 <a href="{{ url_for('unsupervised_clustering_application') }}">Clustering Application</a>.
             </p>
         </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <a href="{{ url_for('unsupervised_clustering_application') }}" class="btn btn-outline-dark">Continue to Clustering Application</a>
     </div>
 
 </div>
