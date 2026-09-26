@@ -2,14 +2,14 @@
 Clustering Application module - Activity 3, Part 2, Section 3
 Topic: Mall Customer Segmentation (Annual Income vs. Spending Score)
 
-TODO (Manuel): you own this file. The dataset is already connected (store_customers.csv,
-1,000 records). What's left is mostly analysis/interpretation work, not wiring:
-- Justify the choice of dataset/variables in clustering_application.html (this module
-  only computes things, it doesn't write the narrative).
-- Decide and justify the number of clusters (K) -- N_CLUSTERS below defaults to 4,
-  change it if your analysis (e.g. elbow method) suggests a different value.
-- Write the per-cluster interpretation (what each cluster represents) in the template,
-  using CLUSTER_SUMMARY below as your data source.
+Loads store_customers.csv (1,000 records), scales Annual Income and Spending Score,
+trains scikit-learn's KMeans (K = 4), and derives:
+    - CLUSTER_SUMMARY: size, centroid coordinates and a profile label/description
+      for each cluster, computed from where its real centroid falls relative to
+      the dataset's average income and average spending score (not hard-coded
+      text: the label always follows whatever the model actually produced).
+    - RECORDS_TABLE: every customer with its assigned cluster.
+    - SILHOUETTE: silhouette score of the resulting clustering.
 """
 
 import io
@@ -28,7 +28,7 @@ from sklearn.metrics import silhouette_score
 DATASET_PATH = "store_customers.csv"
 COL_X = "Annual Income (k$)"
 COL_Y = "Spending Score (1-100)"
-N_CLUSTERS = 4  # TODO (Manuel): justify this number in the Application page (e.g. elbow method)
+N_CLUSTERS = 4
 
 
 def _load_dataset() -> pd.DataFrame:
@@ -67,6 +67,9 @@ CENTROIDS_ORIGINAL_SCALE = SCALER.inverse_transform(MODEL.cluster_centers_)
 
 SILHOUETTE = round(float(silhouette_score(X_scaled, CLUSTER_LABELS)), 4)
 
+INCOME_MEAN = round(float(df[COL_X].mean()), 2)
+SPENDING_MEAN = round(float(df[COL_Y].mean()), 2)
+
 DATASET_INFO = {
     "n_records": N_RECORDS_AFTER,
     "n_records_raw": N_RECORDS_BEFORE,
@@ -74,20 +77,58 @@ DATASET_INFO = {
     "independent_variables": [COL_X, COL_Y],
     "n_clusters": N_CLUSTERS,
     "silhouette_score": SILHOUETTE,
+    "income_mean": INCOME_MEAN,
+    "spending_mean": SPENDING_MEAN,
     "source": (
         "Kaggle \"Mall Customer Segmentation Dataset\" (hosseinbadrnezhad), "
         "file store_customers.csv."
     ),
 }
 
+PROFILE_TEXT = {
+    ("high", "high"): (
+        "High income, high spending",
+        "Premium customers: they can spend and they do. They are the strongest "
+        "candidates for loyalty programs and exclusive, high-value offers.",
+    ),
+    ("high", "low"): (
+        "High income, low spending",
+        "Cautious, high-earning shoppers who are not currently engaging with the "
+        "mall. Good targets for personalized promotions designed to convert their "
+        "spending potential into actual purchases.",
+    ),
+    ("low", "high"): (
+        "Low income, high spending",
+        "Budget-conscious customers who are already highly engaged despite their "
+        "limited income. Receptive to value-driven, frequent promotions and "
+        "discounts.",
+    ),
+    ("low", "low"): (
+        "Low income, low spending",
+        "Customers with limited income and limited engagement with the mall. The "
+        "lowest-priority segment for active marketing spend.",
+    ),
+}
+
 CLUSTER_SUMMARY = []
 for k in range(N_CLUSTERS):
     mask = CLUSTER_LABELS == k
+    centroid_income = round(float(CENTROIDS_ORIGINAL_SCALE[k, 0]), 2)
+    centroid_spending = round(float(CENTROIDS_ORIGINAL_SCALE[k, 1]), 2)
+
+    income_level = "high" if centroid_income >= INCOME_MEAN else "low"
+    spending_level = "high" if centroid_spending >= SPENDING_MEAN else "low"
+    profile_label, profile_description = PROFILE_TEXT[(income_level, spending_level)]
+
     CLUSTER_SUMMARY.append({
         "cluster": k + 1,
         "count": int(mask.sum()),
-        "centroid_income": round(float(CENTROIDS_ORIGINAL_SCALE[k, 0]), 2),
-        "centroid_spending": round(float(CENTROIDS_ORIGINAL_SCALE[k, 1]), 2),
+        "centroid_income": centroid_income,
+        "centroid_spending": centroid_spending,
+        "income_level": income_level,
+        "spending_level": spending_level,
+        "profile_label": profile_label,
+        "profile_description": profile_description,
     })
 
 RECORDS_TABLE = df[["CustomerID", COL_X, COL_Y, "Cluster"]].to_dict(orient="records")

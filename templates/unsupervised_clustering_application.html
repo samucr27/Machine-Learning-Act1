@@ -144,20 +144,56 @@
     <div class="card accent-card mb-4">
         <div class="card-body p-4">
             <h2>Cluster Interpretation</h2>
-            <p class="lead-text mb-0">
-                Reading the centroids above against the scatter plot reveals distinct
-                customer profiles. Clusters with high income and high spending score
-                represent premium customers who both can and do spend heavily — strong
-                candidates for loyalty programs and exclusive offers. Clusters with high
-                income but low spending score represent cautious, high-earning shoppers who
-                are not currently engaging with the mall — good targets for personalized
-                promotions designed to convert their spending potential into actual
-                purchases. Clusters with low income but high spending score represent
-                budget-conscious customers who are already highly engaged, making them
-                receptive to value-driven, frequent promotions. Clusters near average income
-                and average spending score represent typical, stable shoppers who respond
-                well to general, mall-wide marketing rather than targeted campaigns.
+            <p class="lead-text">
+                Each cluster's profile below is derived directly from its own centroid,
+                comparing it to the dataset's average annual income
+                (<strong>{{ dataset_info.income_mean }}k$</strong>) and average spending
+                score (<strong>{{ dataset_info.spending_mean }}</strong>). A centroid above
+                the average on an axis is labeled "high" on that axis, and below average is
+                labeled "low" — nothing here is assigned by hand, it follows whatever
+                K-Means actually found for each cluster.
             </p>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle text-center mb-4">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Cluster</th>
+                            <th>Customers</th>
+                            <th>Centroid — Income (k$)</th>
+                            <th>Centroid — Spending Score</th>
+                            <th>Profile</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cluster in cluster_summary %}
+                        <tr>
+                            <td><span class="badge rounded-pill" style="background-color:#6f4e37;">{{ cluster.cluster }}</span></td>
+                            <td>{{ cluster.count }}</td>
+                            <td>{{ cluster.centroid_income }}</td>
+                            <td>{{ cluster.centroid_spending }}</td>
+                            <td><strong>{{ cluster.profile_label }}</strong></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row g-3">
+                {% for cluster in cluster_summary %}
+                <div class="col-md-6">
+                    <div class="card h-100" style="border-top: 4px solid #6f4e37;">
+                        <div class="card-body">
+                            <h3 class="mt-0">Cluster {{ cluster.cluster }} — {{ cluster.profile_label }}</h3>
+                            <p class="text-muted small mb-2">
+                                {{ cluster.count }} customers &middot; centroid at
+                                ({{ cluster.centroid_income }}k$, {{ cluster.centroid_spending }})
+                            </p>
+                            <p class="mb-0">{{ cluster.profile_description }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
