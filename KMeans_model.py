@@ -2,21 +2,22 @@
 Clustering Application module - Activity 3, Part 2, Section 3
 Topic: Mall Customer Segmentation (Annual Income vs. Spending Score)
 
-Loads store_customers.csv (1,000 records), scales Annual Income and Spending Score,
-trains scikit-learn's KMeans (K = 4), and derives:
-    - CLUSTER_SUMMARY: size, centroid coordinates and a profile label/description
-      for each cluster, computed from where its real centroid falls relative to
-      the dataset's average income and average spending score (not hard-coded
-      text: the label always follows whatever the model actually produced).
-    - RECORDS_TABLE: every customer with its assigned cluster.
-    - SILHOUETTE: silhouette score of the resulting clustering.
+Pipeline:
+    CSV Dataset -> Pandas -> Drop Nulls -> Feature Scaling -> K-Means Training
+    -> Cluster Assignment -> Evaluation -> Visualization
+
+Configuration: KMeans(n_clusters=4, random_state=42, n_init=10)
+    - n_clusters=4: selected with the elbow method (see K_SELECTION below).
+    - random_state=42: fixed initialization, so the same clusters are obtained
+      every time the application starts.
+    - n_init=10: the algorithm runs 10 times with different initial centroids
+      (k-means++) and keeps the solution with the lowest inertia.
 """
 
 import io
 import os
 import base64
 
-import numpy as np
 import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
@@ -25,26 +26,27 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import silhouette_score
 
-DATASET_PATH = "store_customers.csv"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATASET_PATH = os.path.join(BASE_DIR, "store_customers.csv")
+
 COL_X = "Annual Income (k$)"
 COL_Y = "Spending Score (1-100)"
+
 N_CLUSTERS = 4
+RANDOM_STATE = 42
+N_INIT = 10
+K_RANGE = range(2, 7)
 
 
-def _load_dataset() -> pd.DataFrame:
-    if os.path.exists(DATASET_PATH):
-        df = pd.read_csv(DATASET_PATH)
-    else:
-        rng = np.random.default_rng(42)
-        n = 1000
-        df = pd.DataFrame({
-            "CustomerID": np.arange(1, n + 1),
-            "Gender": rng.choice(["M", "F"], n),
-            "Age": rng.integers(18, 70, n),
-            COL_X: rng.normal(60, 25, n).clip(15, 140).round(1),
-            COL_Y: rng.normal(50, 25, n).clip(1, 100).round().astype(int),
-        })
+# ---------------------------------------------------------------------------
+# 1. Load and clean the dataset
+# ---------------------------------------------------------------------------
+def _load_dataset():
+    """Load store_customers.csv and remove records with null values in the clustering variables."""
+    if not os.path.exists(DATASET_PATH):
+        raise FileNotFoundError(f"Dataset not found: {DATASET_PATH}")
 
+    df = pd.read_csv(DATASET_PATH)
     n_before = len(df)
     df = df.dropna(subset=[COL_X, COL_Y]).reset_index(drop=True)
     n_after = len(df)
@@ -55,10 +57,34 @@ df, N_RECORDS_BEFORE, N_RECORDS_AFTER = _load_dataset()
 
 X = df[[COL_X, COL_Y]].to_numpy(dtype=float)
 
+# ---------------------------------------------------------------------------
+# 2. Feature scaling
+# ---------------------------------------------------------------------------
 SCALER = StandardScaler()
 X_scaled = SCALER.fit_transform(X)
 
-MODEL = KMeans(n_clusters=N_CLUSTERS, random_state=42, n_init=10)
+# ---------------------------------------------------------------------------
+# 3. Selection of K: inertia (elbow method) and silhouette score for K = 2..6
+# ---------------------------------------------------------------------------
+K_SELECTION = []
+_previous_inertia = None
+for k in K_RANGE:
+    candidate = KMeans(n_clusters=k, random_state=RANDOM_STATE, n_init=N_INIT)
+    labels = candidate.fit_predict(X_scaled)
+    inertia = float(candidate.inertia_)
+    K_SELECTION.append({
+        "k": k,
+        "inertia": round(inertia, 2),
+        "reduction": None if _previous_inertia is None else round(_previous_inertia - inertia, 2),
+        "silhouette": round(float(silhouette_score(X_scaled, labels)), 4),
+        "selected": k == N_CLUSTERS,
+    })
+    _previous_inertia = inertia
+
+# ---------------------------------------------------------------------------
+# 4. Final model, cluster assignment and evaluation
+# ---------------------------------------------------------------------------
+MODEL = KMeans(n_clusters=N_CLUSTERS, random_state=RANDOM_STATE, n_init=N_INIT)
 CLUSTER_LABELS = MODEL.fit_predict(X_scaled)
 
 df["Cluster"] = CLUSTER_LABELS + 1
@@ -67,73 +93,38 @@ CENTROIDS_ORIGINAL_SCALE = SCALER.inverse_transform(MODEL.cluster_centers_)
 
 SILHOUETTE = round(float(silhouette_score(X_scaled, CLUSTER_LABELS)), 4)
 
-INCOME_MEAN = round(float(df[COL_X].mean()), 2)
-SPENDING_MEAN = round(float(df[COL_Y].mean()), 2)
-
 DATASET_INFO = {
     "n_records": N_RECORDS_AFTER,
     "n_records_raw": N_RECORDS_BEFORE,
     "n_dropped": N_RECORDS_BEFORE - N_RECORDS_AFTER,
     "independent_variables": [COL_X, COL_Y],
     "n_clusters": N_CLUSTERS,
+    "random_state": RANDOM_STATE,
+    "n_init": N_INIT,
+    "k_selection": K_SELECTION,
     "silhouette_score": SILHOUETTE,
-    "income_mean": INCOME_MEAN,
-    "spending_mean": SPENDING_MEAN,
     "source": (
         "Kaggle \"Mall Customer Segmentation Dataset\" (hosseinbadrnezhad), "
         "file store_customers.csv."
     ),
 }
 
-PROFILE_TEXT = {
-    ("high", "high"): (
-        "High income, high spending",
-        "Premium customers: they can spend and they do. They are the strongest "
-        "candidates for loyalty programs and exclusive, high-value offers.",
-    ),
-    ("high", "low"): (
-        "High income, low spending",
-        "Cautious, high-earning shoppers who are not currently engaging with the "
-        "mall. Good targets for personalized promotions designed to convert their "
-        "spending potential into actual purchases.",
-    ),
-    ("low", "high"): (
-        "Low income, high spending",
-        "Budget-conscious customers who are already highly engaged despite their "
-        "limited income. Receptive to value-driven, frequent promotions and "
-        "discounts.",
-    ),
-    ("low", "low"): (
-        "Low income, low spending",
-        "Customers with limited income and limited engagement with the mall. The "
-        "lowest-priority segment for active marketing spend.",
-    ),
-}
-
 CLUSTER_SUMMARY = []
 for k in range(N_CLUSTERS):
     mask = CLUSTER_LABELS == k
-    centroid_income = round(float(CENTROIDS_ORIGINAL_SCALE[k, 0]), 2)
-    centroid_spending = round(float(CENTROIDS_ORIGINAL_SCALE[k, 1]), 2)
-
-    income_level = "high" if centroid_income >= INCOME_MEAN else "low"
-    spending_level = "high" if centroid_spending >= SPENDING_MEAN else "low"
-    profile_label, profile_description = PROFILE_TEXT[(income_level, spending_level)]
-
     CLUSTER_SUMMARY.append({
         "cluster": k + 1,
         "count": int(mask.sum()),
-        "centroid_income": centroid_income,
-        "centroid_spending": centroid_spending,
-        "income_level": income_level,
-        "spending_level": spending_level,
-        "profile_label": profile_label,
-        "profile_description": profile_description,
+        "centroid_income": round(float(CENTROIDS_ORIGINAL_SCALE[k, 0]), 2),
+        "centroid_spending": round(float(CENTROIDS_ORIGINAL_SCALE[k, 1]), 2),
     })
 
 RECORDS_TABLE = df[["CustomerID", COL_X, COL_Y, "Cluster"]].to_dict(orient="records")
 
 
+# ---------------------------------------------------------------------------
+# 5. Visualization
+# ---------------------------------------------------------------------------
 def get_plot_base64() -> str:
     fig, ax = plt.subplots(figsize=(8, 6), dpi=110)
 
@@ -166,6 +157,9 @@ def get_plot_base64() -> str:
 
 
 if __name__ == "__main__":
-    print("Dataset info:", DATASET_INFO)
+    print("Dataset info:", {k: v for k, v in DATASET_INFO.items() if k != "k_selection"})
+    print("K selection:")
+    for row in K_SELECTION:
+        print(" ", row)
     print("Cluster summary:", CLUSTER_SUMMARY)
     print("Silhouette score:", SILHOUETTE)
