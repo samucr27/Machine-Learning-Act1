@@ -81,16 +81,53 @@
                 A <code>KMeans</code> model from scikit-learn was trained on the scaled
                 Annual Income and Spending Score values, following this pipeline:
             </p>
-            <p class="lead-text mb-0 text-center">
+            <p class="lead-text text-center">
                 <code>CSV Dataset &rarr; Pandas &rarr; Drop Nulls &rarr; Feature Scaling &rarr; K-Means Training &rarr; Cluster Assignment &rarr; Evaluation &rarr; Visualization</code>
             </p>
-            <p class="lead-text mt-3 mb-0">
-                The model was configured with <strong>K = {{ dataset_info.n_clusters }}
-                clusters</strong>. This number was chosen because it produces well-separated,
-                evenly sized groups that map cleanly onto distinct customer profiles
-                (for example, high income with low spending, or low income with high
-                spending), rather than splitting the data into groups too small to act on or
-                merging genuinely different customer types into one.
+            <p class="lead-text">
+                The model is configured as
+                <code>KMeans(n_clusters={{ dataset_info.n_clusters }}, random_state={{ dataset_info.random_state }}, n_init={{ dataset_info.n_init }})</code>:
+            </p>
+            <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item"><strong>n_clusters = {{ dataset_info.n_clusters }}:</strong> the number of customer groups, selected with the elbow method shown below.</li>
+                <li class="list-group-item"><strong>random_state = {{ dataset_info.random_state }}:</strong> fixes the random initialization, so the same clusters are obtained every time the application starts.</li>
+                <li class="list-group-item"><strong>n_init = {{ dataset_info.n_init }}:</strong> the algorithm runs {{ dataset_info.n_init }} times with different initial centroids (k-means++) and keeps the solution with the lowest inertia, reducing the risk of a poor local solution.</li>
+            </ul>
+            <p class="lead-text">
+                To select K, the model was trained with K from 2 to 6, comparing the
+                inertia (within-cluster sum of squares, used in the elbow method) and the
+                silhouette score:
+            </p>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>K</th>
+                            <th>Inertia</th>
+                            <th>Reduction vs. Previous K</th>
+                            <th>Silhouette Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in dataset_info.k_selection %}
+                        <tr class="{{ 'table-active fw-bold' if row.selected }}">
+                            <td>{{ row.k }}{% if row.selected %} (selected){% endif %}</td>
+                            <td>{{ "%.2f" | format(row.inertia) }}</td>
+                            <td>{{ "—" if row.reduction is none else "%.2f" | format(row.reduction) }}</td>
+                            <td>{{ "%.4f" | format(row.silhouette) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p class="lead-text mb-0">
+                The inertia decreases sharply up to K = 4, and the improvement becomes small
+                afterwards, which places the elbow of the curve at K = 4. Although K = 2 and
+                K = 3 obtain higher silhouette scores, with K = 3 the largest cluster mixes the
+                low-income, high-spending customers with the average customers, two profiles
+                that require different marketing actions. K = 4 separates them, so it was
+                selected as a balance between compactness, separation, and the usefulness of
+                the segments for the business.
             </p>
         </div>
     </div>
@@ -145,50 +182,28 @@
         <div class="card-body p-4">
             <h2>Cluster Interpretation</h2>
             <p class="lead-text">
-                Each cluster's profile below is derived directly from its own centroid,
-                comparing it to the dataset's average annual income
-                (<strong>{{ dataset_info.income_mean }}k$</strong>) and average spending
-                score (<strong>{{ dataset_info.spending_mean }}</strong>). A centroid above
-                the average on an axis is labeled "high" on that axis, and below average is
-                labeled "low" — nothing here is assigned by hand, it follows whatever
-                K-Means actually found for each cluster.
+                Reading the centroids above against the scatter plot reveals four distinct
+                customer profiles, each one associated with a different marketing strategy:
             </p>
-            <div class="table-responsive">
-                <table class="table table-bordered align-middle text-center mb-4">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Cluster</th>
-                            <th>Customers</th>
-                            <th>Centroid — Income (k$)</th>
-                            <th>Centroid — Spending Score</th>
-                            <th>Profile</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for cluster in cluster_summary %}
-                        <tr>
-                            <td><span class="badge rounded-pill" style="background-color:#6f4e37;">{{ cluster.cluster }}</span></td>
-                            <td>{{ cluster.count }}</td>
-                            <td>{{ cluster.centroid_income }}</td>
-                            <td>{{ cluster.centroid_spending }}</td>
-                            <td><strong>{{ cluster.profile_label }}</strong></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
+            {% set profiles = {
+                1: ["Moderately high income, moderate-low spending", "Customers with good purchasing power who still spend below their potential. They are a good target for mid-range product campaigns and offers that encourage more frequent visits."],
+                2: ["Average income, average spending", "The largest and most stable group, with income and spending close to the average. They respond well to general, mall-wide campaigns rather than targeted ones."],
+                3: ["High income, very low spending", "Cautious, high-earning shoppers who are not currently engaging with the mall. They are the biggest opportunity: personalized promotions and premium offers could convert their spending potential into purchases."],
+                4: ["Low income, high spending", "Budget-conscious customers who are already highly engaged. They are receptive to value-driven, frequent promotions and loyalty programs."]
+            } %}
             <div class="row g-3">
                 {% for cluster in cluster_summary %}
                 <div class="col-md-6">
-                    <div class="card h-100" style="border-top: 4px solid #6f4e37;">
+                    <div class="card h-100">
                         <div class="card-body">
-                            <h3 class="mt-0">Cluster {{ cluster.cluster }} — {{ cluster.profile_label }}</h3>
+                            <h3 class="h5">
+                                <span class="badge rounded-pill" style="background-color:#6f4e37;">{{ cluster.cluster }}</span>
+                                {{ profiles[cluster.cluster][0] }}
+                            </h3>
                             <p class="text-muted small mb-2">
-                                {{ cluster.count }} customers &middot; centroid at
-                                ({{ cluster.centroid_income }}k$, {{ cluster.centroid_spending }})
+                                {{ cluster.count }} customers &middot; centroid income {{ cluster.centroid_income | round(2) }} k$ &middot; centroid spending {{ cluster.centroid_spending | round(2) }}
                             </p>
-                            <p class="mb-0">{{ cluster.profile_description }}</p>
+                            <p class="mb-0">{{ profiles[cluster.cluster][1] }}</p>
                         </div>
                     </div>
                 </div>
