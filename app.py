@@ -31,6 +31,17 @@ from KMeans_model import (
     RECORDS_TABLE as KMEANS_RECORDS_TABLE,
     get_plot_base64 as kmeans_plot,
 )
+from rl_environment import (
+    REWARDS as RL_REWARDS,
+    REWARD_TABLE as RL_REWARD_TABLE,
+    ENV_LEGEND as RL_LEGEND,
+    get_grid as rl_get_grid,
+)
+from rl_model import (
+    CONFIG as RL_CONFIG,
+    PARAM_NOTES as RL_PARAMS,
+    train_agent as rl_train_agent,
+)
 
 app = Flask(__name__)
 
@@ -226,6 +237,31 @@ def unsupervised_clustering_application():
         cluster_summary=KMEANS_CLUSTER_SUMMARY,
         records=KMEANS_RECORDS_TABLE,
         plot_url=kmeans_plot(),
+    )
+
+
+# ---------- Reinforcement Learning: Q-Learning (Activity 4) ----------
+@app.route("/reinforcement-learning/concepts")
+def rl_concepts():
+    return render_template(
+        "rl_concepts.html",
+        config=RL_CONFIG,
+        rewards=RL_REWARDS,
+        reward_table=RL_REWARD_TABLE,
+        params=RL_PARAMS,
+    )
+
+
+@app.route("/reinforcement-learning/application", methods=["GET", "POST"])
+def rl_application():
+    result = rl_train_agent() if request.method == "POST" else None
+    return render_template(
+        "rl_application.html",
+        grid=rl_get_grid(),
+        legend=RL_LEGEND,
+        reward_table=RL_REWARD_TABLE,
+        params=RL_PARAMS,
+        result=result,
     )
 
 
