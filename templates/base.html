@@ -6,6 +6,7 @@
     <title>{% block title %}Data with Roots{% endblock %}</title>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
@@ -72,6 +73,16 @@
                             <li><a class="dropdown-item" href="{{ url_for('unsupervised_concepts') }}">Concepts</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('unsupervised_manual_exercise') }}">Manual Exercise</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('unsupervised_clustering_application') }}">Clustering Application</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Reinforcement Learning
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ url_for('rl_concepts') }}">Concepts</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('rl_application') }}">Application</a></li>
                         </ul>
                     </li>
                 </ul>
