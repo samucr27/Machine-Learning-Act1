@@ -1,87 +1,53 @@
-{#
-=====================================================================
-EXAMPLE FILE - MANUEL (P4)
-
-Description: this is the Reinforcement Learning CONCEPTS page. It explains
-the theory needed to understand the exercise, using the robot and the maze
-as context. Everything here is only an EXAMPLE version.
-
-What to edit:
-  - The lists "element_cards" and "concepts" at the top of the file:
-    rewrite every text in your own words.
-  - The layout, icons and design of the page.
-
-What NOT to change:
-  - The variables used (config, rewards, reward_table, params): they come
-    from app.py and keep the numbers of the page in sync with the code.
-  - The page must include these concepts: What is Reinforcement Learning,
-    Agent, Environment, State, Action, Reward, Penalty, Policy, Step,
-    Episode, Experience, Exploration, Exploitation, Epsilon-Greedy,
-    Immediate reward, Return, Discount factor (γ), State value V(s),
-    Action value Q(s,a) and Q-Learning.
-  - It must use Bootstrap components (cards, accordions, tables, alerts,
-    diagrams, containers, icons), not only plain text.
-
-When you are done: DELETE this comment block and the yellow alert below.
-=====================================================================
-#}
 {% extends "base.html" %}
 
 {% block title %}Reinforcement Learning — Concepts{% endblock %}
 
 {% set element_cards = [
     {'icon': 'bi-robot', 'title': 'Agent',
-     'text': 'The virtual robot that learns. It starts at cell A and has to reach T without being told the route.'},
+     'text': 'The learner of the exercise: a virtual robot placed on the maze. It has no map and no instructions — it only knows its current cell and the four moves it can try.'},
     {'icon': 'bi-grid-3x3-gap', 'title': 'Environment',
-     'text': 'The 10 × 10 maze and its movement rules: free cells (o), walls (#), Danger Zones (D) and the target (T).'},
+     'text': 'The 10 × 10 maze itself, together with its rules: which cells are open (o), which are walls (#), which are Danger Zones (D), and where the target (T) sits.'},
     {'icon': 'bi-geo-alt', 'title': 'State',
-     'text': 'The agent\'s current position, written as (row, column). Example: (0, 0) is the start; (9, 9) is the goal.'},
+     'text': 'A snapshot of where the agent is right now, given as (row, column). The robot starts at state (0, 0) and must eventually reach the goal state.'},
     {'icon': 'bi-arrows-move', 'title': 'Action',
-     'text': 'A movement chosen by the agent. There are four: Up, Down, Left and Right.'},
+     'text': 'One of the four moves available to the agent at any state: Up, Down, Left, or Right. Every step of training begins with choosing one of these.'},
     {'icon': 'bi-plus-circle', 'title': 'Reward',
-     'text': 'Positive feedback. Reaching T gives ' ~ '%+d'|format(rewards.goal) ~ '; a normal move costs only ' ~ rewards.normal ~ '.'},
+     'text': 'The positive signal the agent gets for a good outcome. Reaching T pays ' ~ '%+d'|format(rewards.goal) ~ ', while a normal step only costs ' ~ rewards.normal ~ ' to keep the agent moving efficiently.'},
     {'icon': 'bi-exclamation-triangle', 'title': 'Penalty',
-     'text': 'Negative feedback: ' ~ rewards.invalid ~ ' for leaving the grid, ' ~ rewards.wall ~ ' for hitting a wall and ' ~ rewards.danger ~ ' for entering a Danger Zone.'},
+     'text': 'The negative signal the agent gets for a bad outcome: ' ~ rewards.invalid ~ ' for trying to move off the grid, ' ~ rewards.wall ~ ' for walking into a wall, and ' ~ rewards.danger ~ ' for stepping into a Danger Zone.'},
 ] %}
 
 {% set concepts = [
     {'id': 'policy', 'icon': 'bi-signpost-split', 'title': 'Policy',
-     'body': 'A rule that tells the agent which action to take in each state. In this exercise the final policy is <strong>greedy</strong>: in every cell the agent picks the action with the highest Q-value. Nobody programs the route; the policy emerges from training.'},
+     'body': 'The strategy the agent ends up following: for every state, which action to pick. By the end of training the policy is <strong>greedy</strong> — the robot simply picks whichever action has the highest learned value in its current cell. No one writes this route by hand; it is the outcome of training.'},
     {'id': 'step', 'icon': 'bi-arrow-right-circle', 'title': 'Step',
-     'body': 'One interaction with the environment: the agent is in a state, chooses an action, and receives the next state and a reward. Example: from (0, 1) the action <code>Down</code> leads to (1, 1).'},
+     'body': 'A single move: the agent is at some state, picks an action, and lands on a new state while receiving a reward. For example, taking <code>Down</code> from (0, 1) is one step that ends at (1, 1).'},
     {'id': 'episode', 'icon': 'bi-flag', 'title': 'Episode',
-     'body': 'A complete attempt, from cell A until the agent reaches T or hits the step limit (' ~ config.max_steps ~ ' steps). The agent trains for ' ~ config.episodes ~ ' episodes.'},
+     'body': 'One full attempt at the maze, made of many steps, starting at cell A and ending either when the robot reaches T or when it uses up its step budget (' ~ config.max_steps ~ ' steps). Training runs for ' ~ config.episodes ~ ' episodes in total.'},
     {'id': 'experience', 'icon': 'bi-journal-text', 'title': 'Experience',
-     'body': 'The transition observed after each step: <code>(state, action, reward, next state)</code>. Every experience is used once to update the Q-values with <code>partial_fit()</code>.'},
+     'body': 'What the agent keeps from each step: the tuple <code>(state, action, reward, next state)</code>. Every experience feeds straight into <code>partial_fit()</code> to update what the agent knows.'},
     {'id': 'exploration', 'icon': 'bi-compass', 'title': 'Exploration',
-     'body': 'Trying random actions to discover the map: where the walls are, which cells hurt and where the goal is. Without exploration the agent could settle on a poor route.'},
+     'body': 'Deliberately trying moves the agent has not confirmed are good, just to learn what is out there — where the walls sit, which cells hurt, and eventually where T is. Without this, the robot could get stuck repeating a mediocre route it found by chance.'},
     {'id': 'exploitation', 'icon': 'bi-bullseye', 'title': 'Exploitation',
-     'body': 'Choosing the action with the best estimated Q-value, using what the agent has already learned to collect more reward.'},
+     'body': 'Going with the action the agent currently trusts the most, based on everything learned so far, in order to actually cash in on that knowledge instead of continuing to guess.'},
     {'id': 'epsilon', 'icon': 'bi-dice-5', 'title': 'Epsilon-Greedy strategy',
-     'body': 'With probability <strong>ε</strong> the agent explores (random action); with probability <strong>1 − ε</strong> it exploits (best Q-value). ε starts at ' ~ config.epsilon_start ~ ' (pure exploration), is multiplied by ' ~ config.epsilon_decay ~ ' after every episode and never drops below ' ~ config.epsilon_min ~ '.'},
+     'body': 'The rule that decides, at every step, whether to explore or exploit. With probability <strong>ε</strong> the agent explores by picking a random action; with probability <strong>1 − ε</strong> it exploits its best-known action. ε starts at ' ~ config.epsilon_start ~ ' (all exploration), shrinks by a factor of ' ~ config.epsilon_decay ~ ' after each episode, and is never allowed below ' ~ config.epsilon_min ~ ', so a little exploration always remains.'},
     {'id': 'immediate', 'icon': 'bi-lightning', 'title': 'Immediate reward',
-     'body': 'The reward received right after one action, before thinking about the future. Moving to a normal cell gives ' ~ rewards.normal ~ '; stepping into a Danger Zone gives ' ~ rewards.danger ~ '.'},
+     'body': 'The reward handed out right after a single action, with no regard for what happens afterward. A step into an open cell gives ' ~ rewards.normal ~ '; a step into a Danger Zone gives ' ~ rewards.danger ~ ' instead.'},
     {'id': 'return', 'icon': 'bi-cash-stack', 'title': 'Return',
-     'body': 'The sum of all future rewards, each one discounted: <code>G = r₁ + γ·r₂ + γ²·r₃ + …</code>. It measures how good a whole route is, not just one step. A short route to T has a higher return than a long or dangerous one.'},
+     'body': 'The running total of rewards the agent can expect from a point onward, with later rewards shrunk by the discount factor: <code>G = r₁ + γ·r₂ + γ²·r₃ + …</code>. It scores an entire route, not just the next move, so a short safe path to T ends up with a higher return than a long or risky one.'},
     {'id': 'gamma', 'icon': 'bi-percent', 'title': 'Discount factor (γ)',
-     'body': 'A number between 0 and 1 that reduces the value of far-away rewards. Here γ = ' ~ config.gamma ~ ', so a reward 17 steps away is still worth about 42% of its value. That is why the goal reward can guide the agent from the start.'},
+     'body': 'A number between 0 and 1 that makes distant rewards count for less than nearby ones. In this exercise γ = ' ~ config.gamma ~ ', so even a reward 17 steps away still keeps roughly 42% of its value — enough for the goal reward to pull the agent toward it from far across the maze.'},
     {'id': 'vs', 'icon': 'bi-graph-up', 'title': 'State value V(s)',
-     'body': 'How good it is to be in a state if the agent behaves well from there on: <code>V(s) = max<sub>a</sub> Q(s, a)</code>. Cells close to T (and away from D) end up with higher values than cells far from it.'},
+     'body': 'A measure of how promising a given state is, assuming the agent then acts optimally: <code>V(s) = max<sub>a</sub> Q(s, a)</code>. Cells sitting close to T (and clear of D) naturally end up with higher values than cells stuck far away or boxed in by walls.'},
     {'id': 'qsa', 'icon': 'bi-table', 'title': 'Action value Q(s, a)',
-     'body': 'The expected return of taking action <em>a</em> in state <em>s</em> and then following the policy. Each cell has four Q-values (Up, Down, Left, Right); the Application page shows them after training.'},
+     'body': 'The expected long-term payoff of taking action <em>a</em> while in state <em>s</em>, and then following the policy afterward. Every cell carries four of these values, one per action, and the Application page displays them once training finishes.'},
     {'id': 'qlearning', 'icon': 'bi-cpu', 'title': 'Q-Learning',
-     'body': 'An algorithm that learns Q(s, a) from experience. After every step it builds a target <code>r + γ · max Q(s′, a′)</code> and moves the current estimate toward it. Here Q is estimated with <code>SGDRegressor</code>: <code>predict()</code> estimates the Q-values and <code>partial_fit()</code> applies the update.'},
+     'body': 'The algorithm that builds up Q(s, a) purely from experience. After each step it forms a target value <code>r + γ · max Q(s′, a′)</code> and nudges the current estimate toward it. Here, Q is approximated with <code>SGDRegressor</code>: <code>predict()</code> reads out the current Q-value estimates, and <code>partial_fit()</code> performs that nudge.'},
 ] %}
 
 {% block content %}
 <div class="rl-page">
-    <!-- EXAMPLE - MANUEL: delete this notice when you are done -->
-    <div class="alert alert-warning">
-        <strong>&#9888; EXAMPLE (Manuel, P4):</strong> these concepts and texts are examples.
-        Rewrite them in your own words (see the lists at the top of this file), keep all the
-        required concepts and use the robot and the maze as context.
-        Delete this notice before the Pull Request.
-    </div>
 
     <h1>Reinforcement Learning — Concepts</h1>
 
@@ -91,15 +57,16 @@ When you are done: DELETE this comment block and the yellow alert below.
         <div class="card-body p-4">
             <h2><i class="bi bi-lightbulb"></i> What is Reinforcement Learning?</h2>
             <p class="lead-text">
-                Reinforcement Learning (RL) is a type of Machine Learning in which an <strong>agent</strong> learns by
-                interacting with an <strong>environment</strong>. There is no labeled dataset: the agent tries actions,
-                receives <strong>rewards</strong> or <strong>penalties</strong>, and gradually learns a
-                <strong>policy</strong> that maximizes the expected return.
+                Reinforcement Learning (RL) is a branch of Machine Learning where an <strong>agent</strong> learns
+                purely by interacting with an <strong>environment</strong>, instead of learning from a fixed labeled
+                dataset. The agent tries an action, sees what happens, and collects a <strong>reward</strong> or a
+                <strong>penalty</strong> in response. Repeating this thousands of times lets it build up a
+                <strong>policy</strong> aimed at maximizing the reward it can expect to earn overall.
             </p>
             <div class="alert alert-info mb-0">
                 <i class="bi bi-info-circle"></i>
-                <strong>In this exercise:</strong> a virtual robot moves through a 10 &times; 10 maze looking for the
-                target <strong>T</strong>, trying to avoid walls and Danger Zones.
+                <strong>In this exercise:</strong> a virtual robot moves across a 10 &times; 10 maze searching for the
+                target <strong>T</strong>, while trying to steer clear of walls and Danger Zones.
             </div>
         </div>
     </div>
@@ -118,7 +85,7 @@ When you are done: DELETE this comment block and the yellow alert below.
                 <div class="rl-loop-arrow">&rarr;</div>
                 <div class="rl-loop-box">5. Q-value update</div>
             </div>
-            <p class="text-muted text-center mt-3 mb-0">The cycle repeats until the agent reaches T or the step limit; then a new episode starts.</p>
+            <p class="text-muted text-center mt-3 mb-0">This cycle keeps repeating until the agent reaches T or runs out of steps; then a fresh episode begins.</p>
         </div>
     </div>
 
@@ -161,13 +128,14 @@ When you are done: DELETE this comment block and the yellow alert below.
     <div class="card accent-card mb-4">
         <div class="card-body p-4">
             <h2><i class="bi bi-calculator"></i> How Q-Learning Updates a Value</h2>
-            <p class="lead-text">After every step the agent computes a target and moves its estimate toward it:</p>
+            <p class="lead-text">After every single step, the agent builds a target value and moves its current estimate a little closer to it:</p>
             <p class="text-center"><code>target = r + γ · max Q(s′, a′)</code></p>
             <p class="text-center"><code>Q(s, a) ← Q(s, a) + α · (target − Q(s, a))</code></p>
             <div class="alert alert-secondary mb-0">
                 <i class="bi bi-info-circle"></i>
-                <strong>Implementation:</strong> the target is passed to <code>SGDRegressor.partial_fit()</code>, whose
-                learning rate plays the role of α. At the goal T the target is just the goal reward, because the episode ends.
+                <strong>Implementation:</strong> that target value is fed into <code>SGDRegressor.partial_fit()</code>,
+                whose internal learning rate plays the role of α. At the target cell T the target is simply the goal
+                reward, since the episode ends there and there is no next state to consider.
             </div>
         </div>
     </div>
