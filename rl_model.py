@@ -206,3 +206,133 @@ def choose_action(q_state, epsilon, rng):
         return int(rng.integers(N_ACTIONS)), "explore"
     best = np.flatnonzero(np.isclose(q_state, q_state.max()))
     return int(rng.choice(best)), "exploit"
+
+# ---------------------------------------------------------------------------
+# 5. TRAINING (Q-Learning)
+# ---------------------------------------------------------------------------
+def train():
+    """
+    Train the agent with Q-Learning for CONFIG["episodes"] episodes.
+
+    Q-Learning target for every transition (s, a, r, s'):
+        target = r + gamma * max_a' Q(s', a')      if the episode continues
+        target = r                                  if s' is the goal T
+    """
+    rng = np.random.default_rng(CONFIG["seed"])
+    env = GridEnvironment(CONFIG["max_steps"])
+    q_function = QFunction(CONFIG["learning_rate"], CONFIG["seed"])
+    epsilon = CONFIG["epsilon_start"]
+
+    history = []
+    best_episode = None
+
+    for episode in range(1, CONFIG["episodes"] + 1):
+        state = env.reset()
+        q_state = q_function.predict(state)
+        total_reward, explored, exploited = 0, 0, 0
+        path = [state]
+
+        while True:
+            action_idx, mode = choose_action(q_state, epsilon, rng)
+            if mode == "explore":
+                explored += 1
+            else:
+                exploited += 1
+
+            t = env.step(action_idx)
+            next_state = t["next_state"]
+
+            # Q-value update
+            q_next = q_function.predict(next_state)
+            target = t["reward"] if t["reached_goal"] else t["reward"] + CONFIG["gamma"] * float(q_next.max())
+            q_function.update(state, action_idx, target)
+
+            total_reward += t["reward"]
+            path.append(next_state)
+
+            if t["done"]:
+                break
+
+            # Only Q(state, action) changed, so the prediction for next_state is still valid
+            # unless the agent stayed in the same cell (wall or invalid move).
+            q_state = q_function.predict(next_state) if next_state == state else q_next
+            state = next_state
+
+        history.append({
+            "episode": episode,
+            "reward": total_reward,
+            "steps": env.steps_taken,
+            "success": t["reached_goal"],
+            "epsilon": epsilon,
+            "explored": explored,
+            "exploited": exploited,
+        })
+
+        if t["reached_goal"] and (best_episode is None or total_reward > best_episode["reward"]):
+            best_episode = {"episode": episode, "reward": total_reward, "steps": env.steps_taken, "path": path}
+
+        epsilon = max(CONFIG["epsilon_min"], epsilon * CONFIG["epsilon_decay"])
+
+    return q_function, history, best_episode, epsilon
+
+
+# ---------------------------------------------------------------------------
+# 6. EVALUATION WITHOUT EXPLORATION
+# ---------------------------------------------------------------------------
+def evaluate(q_function):
+    """
+    Run the learned policy greedily (epsilon = 0): in every state the agent takes the
+    action with the highest Q-value. Every step is recorded for the evaluation table.
+    The run stops at the goal, at the step limit, or if the policy repeats a state (loop).
+    """
+    env = GridEnvironment(CONFIG["max_steps"])
+    state = env.reset()
+    path, steps, visited = [state], [], {state}
+    total_reward, goal_reached, stopped_by_loop = 0, False, False
+    hits = {"Danger Zone": 0, "Wall": 0, "Invalid move": 0}
+
+    while True:
+        action_idx = int(np.argmax(q_function.predict(state)))
+        t = env.step(action_idx)
+
+        steps.append({
+            "step": len(steps) + 1,
+            "state": t["state"],
+            "action": t["action"],
+            "next_state": t["next_state"],
+            "cell_type": t["cell_type"],
+            "reward": t["reward"],
+            "done": t["done"],
+        })
+        total_reward += t["reward"]
+        if t["cell_type"] in hits:
+            hits[t["cell_type"]] += 1
+        path.append(t["next_state"])
+
+        if t["reached_goal"]:
+            goal_reached = True
+            break
+        if t["done"]:
+            break
+        if t["next_state"] in visited:
+            stopped_by_loop = True
+            break
+        visited.add(t["next_state"])
+        state = t["next_state"]
+
+    path_index = {}
+    for n, cell in enumerate(path):
+        path_index.setdefault(cell, n)
+
+    return {
+        "goal_reached": goal_reached,
+        "moves": len(steps),
+        "total_reward": total_reward,
+        "path": path,
+        "path_index": path_index,
+        "steps": steps,
+        "danger_hits": hits["Danger Zone"],
+        "wall_hits": hits["Wall"],
+        "invalid_hits": hits["Invalid move"],
+        "stopped_by_loop": stopped_by_loop,
+    }
