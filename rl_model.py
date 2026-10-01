@@ -207,6 +207,7 @@ def choose_action(q_state, epsilon, rng):
     best = np.flatnonzero(np.isclose(q_state, q_state.max()))
     return int(rng.choice(best)), "exploit"
 
+
 # ---------------------------------------------------------------------------
 # 5. TRAINING (Q-Learning)
 # ---------------------------------------------------------------------------
@@ -336,3 +337,103 @@ def evaluate(q_function):
         "invalid_hits": hits["Invalid move"],
         "stopped_by_loop": stopped_by_loop,
     }
+
+
+# ---------------------------------------------------------------------------
+# 7. LEARNED Q-VALUES
+# ---------------------------------------------------------------------------
+def get_q_table(q_function):
+    """Q-values of Up, Down, Left and Right for every valid state (walls excluded)."""
+    rows = []
+    for r in range(ROWS):
+        for c in range(COLS):
+            if GRID[r][c] == "#":
+                continue
+            q = q_function.predict((r, c))
+            rows.append({
+                "state": (r, c),
+                "cell": GRID[r][c],
+                "Up": round(float(q[0]), 4),
+                "Down": round(float(q[1]), 4),
+                "Left": round(float(q[2]), 4),
+                "Right": round(float(q[3]), 4),
+                "best": ACTIONS[int(np.argmax(q))],
+            })
+    return rows
+
+
+# ---------------------------------------------------------------------------
+# LEARNING CURVE
+# ---------------------------------------------------------------------------
+def _curve_plot(history, window=20):
+    episodes = np.array([h["episode"] for h in history])
+    rewards = np.array([h["reward"] for h in history], dtype=float)
+    epsilons = np.array([h["epsilon"] for h in history])
+    moving = np.convolve(rewards, np.ones(window) / window, mode="valid")
+
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 6), dpi=110, sharex=True,
+                                   gridspec_kw={"height_ratios": [2.2, 1]})
+    ax1.plot(episodes, rewards, color="#adb5bd", linewidth=0.8, label="Reward per episode")
+    ax1.plot(episodes[window - 1:], moving, color="#3B6E5C", linewidth=2.2,
+             label=f"Moving average ({window} episodes)")
+    ax1.set_ylabel("Total reward")
+    ax1.set_title("Learning curve")
+    ax1.legend(fontsize=9)
+    ax1.grid(alpha=0.3)
+
+    ax2.plot(episodes, epsilons, color="#b5651d", linewidth=2)
+    ax2.set_xlabel("Episode")
+    ax2.set_ylabel("Epsilon (ε)")
+    ax2.set_title("Exploration rate", fontsize=10)
+    ax2.grid(alpha=0.3)
+    fig.tight_layout()
+
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png")
+    plt.close(fig)
+    return base64.b64encode(buf.getvalue()).decode("utf-8")
+
+
+# ---------------------------------------------------------------------------
+# 8. PUBLIC API (called by app.py when the user presses "Train Agent")
+# ---------------------------------------------------------------------------
+def train_agent():
+    """Train the agent, evaluate the learned policy and return everything the page needs."""
+    q_function, history, best_episode, final_epsilon = train()
+    episodes = CONFIG["episodes"]
+    successes = sum(1 for h in history if h["success"])
+    first_success = next((h["episode"] for h in history if h["success"]), None)
+
+    return {
+        "summary": {
+            "episodes": episodes,
+            "successes": successes,
+            "success_pct": round(100 * successes / episodes, 2),
+            "avg_reward": round(float(np.mean([h["reward"] for h in history])), 2),
+            "final_epsilon": round(final_epsilon, 4),
+            "first_success_episode": first_success,
+            "best_episode": None if best_episode is None else {
+                "episode": best_episode["episode"],
+                "reward": best_episode["reward"],
+                "steps": best_episode["steps"],
+            },
+            "total_explored": sum(h["explored"] for h in history),
+            "total_exploited": sum(h["exploited"] for h in history),
+        },
+        "evaluation": evaluate(q_function),
+        "q_table": get_q_table(q_function),
+        "curve_plot": _curve_plot(history),
+    }
+
+
+if __name__ == "__main__":
+    import time
+
+    start = time.time()
+    result = train_agent()
+    print(f"Training time: {time.time() - start:.1f} s")
+    print("Summary:", result["summary"])
+    ev = result["evaluation"]
+    print("Goal reached:", ev["goal_reached"], "| moves:", ev["moves"], "| total reward:", ev["total_reward"])
+    print("Danger / wall / invalid:", ev["danger_hits"], ev["wall_hits"], ev["invalid_hits"])
+    print("Path:", ev["path"])
