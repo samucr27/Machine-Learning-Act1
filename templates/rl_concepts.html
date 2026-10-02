@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Reinforcement Learning — Concepts{% endblock %}
+
+{% set element_cards = [
+    {'icon': 'bi-robot', 'title': 'Agent',
+     'text': 'The learner of the exercise: a virtual robot placed on the maze. It has no map and no instructions — it only knows its current cell and the four moves it can try.'},
+    {'icon': 'bi-grid-3x3-gap', 'title': 'Environment',
+     'text': 'The 10 × 10 maze itself, together with its rules: which cells are open (o), which are walls (#), which are Danger Zones (D), and where the target (T) sits.'},
+    {'icon': 'bi-geo-alt', 'title': 'State',
+     'text': 'A snapshot of where the agent is right now, given as (row, column). The robot starts at state (0, 0) and must eventually reach the goal state.'},
+    {'icon': 'bi-arrows-move', 'title': 'Action',
+     'text': 'One of the four moves available to the agent at any state: Up, Down, Left, or Right. Every step of training begins with choosing one of these.'},
+    {'icon': 'bi-plus-circle', 'title': 'Reward',
+     'text': 'The positive signal the agent gets for a good outcome. Reaching T pays ' ~ '%+d'|format(rewards.goal) ~ ', while a normal step only costs ' ~ rewards.normal ~ ' to keep the agent moving efficiently.'},
+    {'icon': 'bi-exclamation-triangle', 'title': 'Penalty',
+     'text': 'The negative signal the agent gets for a bad outcome: ' ~ rewards.invalid ~ ' for trying to move off the grid, ' ~ rewards.wall ~ ' for walking into a wall, and ' ~ rewards.danger ~ ' for stepping into a Danger Zone.'},
+] %}
+
+{% set concepts = [
+    {'id': 'policy', 'icon': 'bi-signpost-split', 'title': 'Policy',
+     'body': 'The strategy the agent ends up following: for every state, which action to pick. By the end of training the policy is <strong>greedy</strong> — the robot simply picks whichever action has the highest learned value in its current cell. No one writes this route by hand; it is the outcome of training.'},
+    {'id': 'step', 'icon': 'bi-arrow-right-circle', 'title': 'Step',
+     'body': 'A single move: the agent is at some state, picks an action, and lands on a new state while receiving a reward. For example, taking <code>Down</code> from (0, 1) is one step that ends at (1, 1).'},
+    {'id': 'episode', 'icon': 'bi-flag', 'title': 'Episode',
+     'body': 'One full attempt at the maze, made of many steps, starting at cell A and ending either when the robot reaches T or when it uses up its step budget (' ~ config.max_steps ~ ' steps). Training runs for ' ~ config.episodes ~ ' episodes in total.'},
+    {'id': 'experience', 'icon': 'bi-journal-text', 'title': 'Experience',
+     'body': 'What the agent keeps from each step: the tuple <code>(state, action, reward, next state)</code>. Every experience feeds straight into <code>partial_fit()</code> to update what the agent knows.'},
+    {'id': 'exploration', 'icon': 'bi-compass', 'title': 'Exploration',
+     'body': 'Deliberately trying moves the agent has not confirmed are good, just to learn what is out there — where the walls sit, which cells hurt, and eventually where T is. Without this, the robot could get stuck repeating a mediocre route it found by chance.'},
+    {'id': 'exploitation', 'icon': 'bi-bullseye', 'title': 'Exploitation',
+     'body': 'Going with the action the agent currently trusts the most, based on everything learned so far, in order to actually cash in on that knowledge instead of continuing to guess.'},
+    {'id': 'epsilon', 'icon': 'bi-dice-5', 'title': 'Epsilon-Greedy strategy',
+     'body': 'The rule that decides, at every step, whether to explore or exploit. With probability <strong>ε</strong> the agent explores by picking a random action; with probability <strong>1 − ε</strong> it exploits its best-known action. ε starts at ' ~ config.epsilon_start ~ ' (all exploration), shrinks by a factor of ' ~ config.epsilon_decay ~ ' after each episode, and is never allowed below ' ~ config.epsilon_min ~ ', so a little exploration always remains.'},
+    {'id': 'immediate', 'icon': 'bi-lightning', 'title': 'Immediate reward',
+     'body': 'The reward handed out right after a single action, with no regard for what happens afterward. A step into an open cell gives ' ~ rewards.normal ~ '; a step into a Danger Zone gives ' ~ rewards.danger ~ ' instead.'},
+    {'id': 'return', 'icon': 'bi-cash-stack', 'title': 'Return',
+     'body': 'The running total of rewards the agent can expect from a point onward, with later rewards shrunk by the discount factor: <code>G = r₁ + γ·r₂ + γ²·r₃ + …</code>. It scores an entire route, not just the next move, so a short safe path to T ends up with a higher return than a long or risky one.'},
+    {'id': 'gamma', 'icon': 'bi-percent', 'title': 'Discount factor (γ)',
+     'body': 'A number between 0 and 1 that makes distant rewards count for less than nearby ones. In this exercise γ = ' ~ config.gamma ~ ', so even a reward 17 steps away still keeps roughly 42% of its value — enough for the goal reward to pull the agent toward it from far across the maze.'},
+    {'id': 'vs', 'icon': 'bi-graph-up', 'title': 'State value V(s)',
+     'body': 'A measure of how promising a given state is, assuming the agent then acts optimally: <code>V(s) = max<sub>a</sub> Q(s, a)</code>. Cells sitting close to T (and clear of D) naturally end up with higher values than cells stuck far away or boxed in by walls.'},
+    {'id': 'qsa', 'icon': 'bi-table', 'title': 'Action value Q(s, a)',
+     'body': 'The expected long-term payoff of taking action <em>a</em> while in state <em>s</em>, and then following the policy afterward. Every cell carries four of these values, one per action, and the Application page displays them once training finishes.'},
+    {'id': 'qlearning', 'icon': 'bi-cpu', 'title': 'Q-Learning',
+     'body': 'The algorithm that builds up Q(s, a) purely from experience. After each step it forms a target value <code>r + γ · max Q(s′, a′)</code> and nudges the current estimate toward it. Here, Q is approximated with <code>SGDRegressor</code>: <code>predict()</code> reads out the current Q-value estimates, and <code>partial_fit()</code> performs that nudge.'},
+] %}
+
+{% block content %}
+<div class="rl-page">
+
+    <h1>Reinforcement Learning — Concepts</h1>
+
+    <br><br>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2><i class="bi bi-lightbulb"></i> What is Reinforcement Learning?</h2>
+            <p class="lead-text">
+                Reinforcement Learning (RL) is a branch of Machine Learning where an <strong>agent</strong> learns
+                purely by interacting with an <strong>environment</strong>, instead of learning from a fixed labeled
+                dataset. The agent tries an action, sees what happens, and collects a <strong>reward</strong> or a
+                <strong>penalty</strong> in response. Repeating this thousands of times lets it build up a
+                <strong>policy</strong> aimed at maximizing the reward it can expect to earn overall.
+            </p>
+            <div class="alert alert-info mb-0">
+                <i class="bi bi-info-circle"></i>
+                <strong>In this exercise:</strong> a virtual robot moves across a 10 &times; 10 maze searching for the
+                target <strong>T</strong>, while trying to steer clear of walls and Danger Zones.
+            </div>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2><i class="bi bi-diagram-3"></i> The Reinforcement Learning Cycle</h2>
+            <div class="rl-loop">
+                <div class="rl-loop-box">1. Agent observes state <em>s</em></div>
+                <div class="rl-loop-arrow">&rarr;</div>
+                <div class="rl-loop-box">2. Chooses action <em>a</em><br><small>(ε-greedy)</small></div>
+                <div class="rl-loop-arrow">&rarr;</div>
+                <div class="rl-loop-box">3. Environment applies the move</div>
+                <div class="rl-loop-arrow">&rarr;</div>
+                <div class="rl-loop-box">4. Returns reward <em>r</em> and next state <em>s′</em></div>
+                <div class="rl-loop-arrow">&rarr;</div>
+                <div class="rl-loop-box">5. Q-value update</div>
+            </div>
+            <p class="text-muted text-center mt-3 mb-0">This cycle keeps repeating until the agent reaches T or runs out of steps; then a fresh episode begins.</p>
+        </div>
+    </div>
+
+    <h2 class="mb-3"><i class="bi bi-puzzle"></i> Key Elements</h2>
+    <div class="row g-3 mb-4">
+        {% for c in element_cards %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card accent-card h-100">
+                <div class="card-body p-4">
+                    <h3 class="h5"><i class="bi {{ c.icon }} rl-icon"></i> {{ c.title }}</h3>
+                    <p class="mb-0">{{ c.text }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2><i class="bi bi-book"></i> Learning Concepts</h2>
+            <div class="accordion" id="rlConcepts">
+                {% for c in concepts %}
+                <div class="accordion-item rl-accordion-item">
+                    <h2 class="accordion-header" id="heading-{{ c.id }}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse-{{ c.id }}" aria-expanded="false" aria-controls="collapse-{{ c.id }}">
+                            <i class="bi {{ c.icon }} rl-icon me-2"></i> {{ c.title }}
+                        </button>
+                    </h2>
+                    <div id="collapse-{{ c.id }}" class="accordion-collapse collapse"
+                         aria-labelledby="heading-{{ c.id }}" data-bs-parent="#rlConcepts">
+                        <div class="accordion-body">{{ c.body | safe }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card accent-card mb-4">
+        <div class="card-body p-4">
+            <h2><i class="bi bi-calculator"></i> How Q-Learning Updates a Value</h2>
+            <p class="lead-text">After every single step, the agent builds a target value and moves its current estimate a little closer to it:</p>
+            <p class="text-center"><code>target = r + γ · max Q(s′, a′)</code></p>
+            <p class="text-center"><code>Q(s, a) ← Q(s, a) + α · (target − Q(s, a))</code></p>
+            <div class="alert alert-secondary mb-0">
+                <i class="bi bi-info-circle"></i>
+                <strong>Implementation:</strong> that target value is fed into <code>SGDRegressor.partial_fit()</code>,
+                whose internal learning rate plays the role of α. At the target cell T the target is simply the goal
+                reward, since the episode ends there and there is no next state to consider.
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+            <div class="card accent-card h-100">
+                <div class="card-body p-4">
+                    <h2><i class="bi bi-trophy"></i> Rewards in this Exercise</h2>
+                    <table class="table table-sm align-middle mb-0">
+                        <thead><tr><th>Event</th><th class="text-end">Reward</th></tr></thead>
+                        <tbody>
+                            {% for row in reward_table %}
+                            <tr>
+                                <td>{{ row.event }}</td>
+                                <td class="text-end fw-bold {{ 'text-success' if row.reward > 0 else 'text-danger' }}">{{ '%+d'|format(row.reward) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card accent-card h-100">
+                <div class="card-body p-4">
+                    <h2><i class="bi bi-sliders"></i> Training Parameters</h2>
+                    <table class="table table-sm align-middle mb-0">
+                        <thead><tr><th>Parameter</th><th class="text-end">Value</th></tr></thead>
+                        <tbody>
+                            {% for p in params %}
+                            <tr><td>{{ p.name }}</td><td class="text-end"><code>{{ p.value }}</code></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <a href="{{ url_for('rl_application') }}" class="btn btn-outline-dark">Continue to Application</a>
+    </div>
+</div>
+{% endblock %}
